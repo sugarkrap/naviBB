@@ -20,7 +20,7 @@
       </div>
     <% } %>
 
-    <form action="/admin/categories" method="POST" enctype="multipart/form-data">
+    <form id="categoriesForm" action="/admin/categories" method="POST" enctype="multipart/form-data">
       <fieldset>
         <legend>Categories</legend>
         <table class="navi-table">
@@ -158,6 +158,71 @@
         </button>
       </div>
     </form>
+
+    <script>
+    (function() {
+      var form = document.getElementById('categoriesForm');
+      if (!form) return;
+
+      function defaultSelectValue(select) {
+        for (var i = 0; i < select.options.length; i++) {
+          if (select.options[i].defaultSelected) return select.options[i].value;
+        }
+        return '';
+      }
+
+      function appendIfChanged(fd, field) {
+        if (field.type === 'file') {
+          if (field.files && field.files[0]) fd.append(field.name, field.files[0]);
+        } else if (field.type === 'checkbox') {
+          if (field.checked && field.checked !== field.defaultChecked) {
+            fd.append(field.name, 'on');
+          }
+        } else if (field.tagName === 'SELECT') {
+          if (field.value !== defaultSelectValue(field)) fd.append(field.name, field.value);
+        } else if (field.value !== field.defaultValue) {
+          fd.append(field.name, field.value);
+        }
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var fd = new FormData();
+        var rows = form.querySelectorAll('tbody tr.categoryRow');
+        for (var r = 0; r < rows.length; r++) {
+          var fields = rows[r].querySelectorAll('input, select');
+          for (var f = 0; f < fields.length; f++) {
+            appendIfChanged(fd, fields[f]);
+          }
+        }
+
+        ['newName', 'newDescription', 'newParent', 'newGroup'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) fd.append(el.name, el.value);
+        });
+        var newLogo = document.getElementById('newLogo');
+        if (newLogo && newLogo.files && newLogo.files[0]) {
+          fd.append(newLogo.name, newLogo.files[0]);
+        }
+
+        var submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) submitButton.disabled = true;
+
+        fetch(form.action, { method: 'POST', body: fd })
+          .then(function(res) { return res.text(); })
+          .then(function(html) {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(function(err) {
+            if (submitButton) submitButton.disabled = false;
+            window.alert('Failed to save categories: ' + err.message);
+          });
+      });
+    })();
+    </script>
 
     <form action="/admin/category-groups" method="POST">
       <fieldset>

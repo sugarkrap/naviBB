@@ -282,9 +282,9 @@ export const admin = async (
         cat.description = description;
       }
 
-      const parentValue = grouped.parent?.[id] ?? '';
-      const newParent = parentValue || null;
       const oldParent = cat.parent ? cat.parent.toString() : null;
+      const parentSubmitted = grouped.parent !== undefined && id in grouped.parent;
+      const newParent = parentSubmitted ? grouped.parent[id] || null : oldParent;
 
       const groupSubmitted = grouped.group !== undefined && id in grouped.group;
       const groupValue = groupSubmitted ? grouped.group[id] || null : null;
