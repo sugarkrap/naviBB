@@ -12,6 +12,9 @@
       <button type="button" onclick="postWrap('u')" title="Underline"><u>U</u></button>
       <button type="button" onclick="postLink()" title="Link">Link</button>
       <button type="button" onclick="postImage()" title="Image">Img</button>
+      <button type="button" onclick="postAlign('left')" title="Align left">Left</button>
+      <button type="button" onclick="postAlign('center')" title="Align center">Center</button>
+      <button type="button" onclick="postAlign('right')" title="Align right">Right</button>
     </div>
     <div class="postToolbarMode">
       <label>
@@ -105,6 +108,16 @@
       replacement = '![](' + url + ')';
     }
     replaceSelection(ta, replacement, saved);
+  };
+
+  window.postAlign = function(value) {
+    var ta = document.getElementById('postContent');
+    var saved = getSelection(ta);
+    var sel = ta.value.substring(saved.start, saved.end);
+    var open = '[align=' + value + ']';
+    var close = '[/align]';
+    replaceSelection(ta, open + sel + close, saved);
+    ta.setSelectionRange(saved.start + open.length, saved.start + open.length + sel.length);
   };
 })();
 </script>

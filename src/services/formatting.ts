@@ -15,9 +15,11 @@ type Token =
   | { type: 'open'; tag: string; value?: string }
   | { type: 'close'; tag: string };
 
+const ALIGN_VALUES = new Set(['left', 'center', 'right']);
+
 const parseBBCode = (input: string): Token[] => {
   const tokens: Token[] = [];
-  const regex = /\[(\/?)(b|i|u|url|img)(?:=([^\]]+))?\]/gi;
+  const regex = /\[(\/?)(b|i|u|url|img|align)(?:=([^\]]+))?\]/gi;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(input)) !== null) {
@@ -87,6 +89,12 @@ const renderBBCode = (input: string): string => {
       } else if (token.tag === 'img') {
         tagStack.push('img');
         hrefStack.push(null);
+      } else if (token.tag === 'align') {
+        const requested = token.value?.toLowerCase();
+        const align =
+          requested && ALIGN_VALUES.has(requested) ? requested : 'left';
+        out.push(`<div style="text-align: ${align}">`);
+        tagStack.push('align');
       }
     } else if (token.type === 'close') {
       const top = tagStack.pop();
@@ -95,6 +103,7 @@ const renderBBCode = (input: string): string => {
         if (token.tag === 'b') out.push('</strong>');
         else if (token.tag === 'i') out.push('</em>');
         else if (token.tag === 'u') out.push('</u>');
+        else if (token.tag === 'align') out.push('</div>');
       }
     }
   }
@@ -105,6 +114,7 @@ const renderBBCode = (input: string): string => {
     if (tag === 'b') out.push('</strong>');
     else if (tag === 'i') out.push('</em>');
     else if (tag === 'u') out.push('</u>');
+    else if (tag === 'align') out.push('</div>');
   }
 
   return out.join('');
@@ -118,8 +128,11 @@ const renderMarkdown = (input: string): string => {
     placeholders.push(html);
     return placeholder(id);
   };
-
-  let text = input;
+  const resolvePlaceholders = (text: string): string =>
+    text.replace(
+      /\x00NAVIBB_HTML_(\d+)\x00/g,
+      (_, id) => placeholders[parseInt(id, 10)],
+    );
 
   const ensureProtocol = (url: string): string => {
     if (!/^https?:\/\//.test(url)) {
@@ -128,31 +141,40 @@ const renderMarkdown = (input: string): string => {
     return url;
   };
 
-  text = text.replace(/!\[([^[\]]*)\]\(([^\s)]+)\)/g, (_match, alt, url) =>
-    stash(
-      `<img src="${escapeHtml(ensureProtocol(url))}" alt="${escapeHtml(alt)}" loading="lazy">`,
-    ),
-  );
+  const renderInline = (input: string): string => {
+    let text = input;
 
-  text = text.replace(/\[([^[\]]+)\]\(([^\s)]+)\)/g, (_match, label, url) =>
-    stash(
-      `<a href="${escapeHtml(ensureProtocol(url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`,
-    ),
-  );
+    text = text.replace(
+      /\[align=(left|center|right)\]([\s\S]*?)\[\/align\]/gi,
+      (_match, value, inner) =>
+        stash(
+          `<div style="text-align: ${value.toLowerCase()}">${renderInline(inner)}</div>`,
+        ),
+    );
 
-  text = escapeHtml(text);
+    text = text.replace(/!\[([^[\]]*)\]\(([^\s)]+)\)/g, (_match, alt, url) =>
+      stash(
+        `<img src="${escapeHtml(ensureProtocol(url))}" alt="${escapeHtml(alt)}" loading="lazy">`,
+      ),
+    );
 
-  text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  text = text.replace(/(^|[^*])\*([^*]+)\*(?![*])/g, '$1<em>$2</em>');
-  text = text.replace(/__([^_]+)__/g, '<u>$1</u>');
-  text = text.replace(/\n/g, '<br>');
+    text = text.replace(/\[([^[\]]+)\]\(([^\s)]+)\)/g, (_match, label, url) =>
+      stash(
+        `<a href="${escapeHtml(ensureProtocol(url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`,
+      ),
+    );
 
-  text = text.replace(
-    /\x00NAVIBB_HTML_(\d+)\x00/g,
-    (_, id) => placeholders[parseInt(id, 10)],
-  );
+    text = escapeHtml(text);
 
-  return text;
+    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/(^|[^*])\*([^*]+)\*(?![*])/g, '$1<em>$2</em>');
+    text = text.replace(/__([^_]+)__/g, '<u>$1</u>');
+    text = text.replace(/\n/g, '<br>');
+
+    return resolvePlaceholders(text);
+  };
+
+  return renderInline(input);
 };
 
 export const renderPost = (
