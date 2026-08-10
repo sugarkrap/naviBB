@@ -5,6 +5,30 @@
   gap: $spacing-small;
 }
 
+.categoryRow-name {
+  padding-left: calc(
+    #{$spacing-small} + #{$spacing} * var(--category-depth, 0)
+  );
+}
+
+.categoryRow--root {
+  font-weight: bold;
+}
+
+.categoryRow--child {
+  font-size: 0.9em;
+
+  td {
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+  }
+
+  .navi-category-logo {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 .removeLogoLabel {
   display: flex;
   align-items: center;

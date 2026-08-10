@@ -35,7 +35,10 @@
           </thead>
           <tbody>
             <% categories.forEach((cat) => { %>
-              <tr>
+              <tr
+                class="categoryRow <%= cat.depth > 0 ? 'categoryRow--child' : 'categoryRow--root' %>"
+                style="--category-depth: <%= cat.depth %>"
+              >
                 <td>
                   <% if (cat.logo) { %>
                     <img
@@ -45,7 +48,7 @@
                     />
                   <% } %>
                 </td>
-                <td>
+                <td class="categoryRow-name">
                   <input
                     class="navi-input"
                     type="text"

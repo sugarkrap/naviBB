@@ -24,6 +24,49 @@ const currentPage = (query: { page?: string }): number => {
 
 const FIELD_NAME_PATTERN = /^(\w+)\[(.+)\]$/;
 
+// i hate flattening
+const sortCategoriesForAdmin = <
+  T extends {
+    _id: { toString(): string };
+    parent?: { toString(): string } | null;
+    name: string;
+  },
+>(
+  categories: T[],
+): (T & { depth: number })[] => {
+  const byParent = new Map<string, T[]>();
+  for (const cat of categories) {
+    const key = cat.parent ? cat.parent.toString() : '';
+    const siblings = byParent.get(key) ?? [];
+    siblings.push(cat);
+    byParent.set(key, siblings);
+  }
+  for (const siblings of byParent.values()) {
+    siblings.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  const out: (T & { depth: number })[] = [];
+  const visited = new Set<string>();
+  const visit = (parentKey: string, depth: number) => {
+    for (const cat of byParent.get(parentKey) ?? []) {
+      const id = cat._id.toString();
+      if (visited.has(id)) continue; // guards against a parent cycle i hope
+      visited.add(id);
+      out.push({ ...cat, depth });
+      visit(id, depth + 1);
+    }
+  };
+  visit('', 0);
+
+  for (const cat of categories) {
+    if (!visited.has(cat._id.toString())) {
+      out.push({ ...cat, depth: 0 });
+    }
+  }
+
+  return out;
+};
+
 const indexFields = (
   fields: Record<string, string>,
 ): Record<string, Record<string, string>> => {
@@ -79,7 +122,9 @@ export const admin = async (
     reply.view('admin-categories', {
       ...config,
       user: reply.locals!.user,
-      categories: await Category.find().sort('name').lean(),
+      categories: sortCategoriesForAdmin(
+        await Category.find().sort('name').lean(),
+      ),
       ...feedback,
     });
 
