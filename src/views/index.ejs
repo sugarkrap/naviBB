@@ -1,3 +1,9 @@
+<% if (welcomeMessageHtml) { %>
+  <div class="info">
+    <img src="/static/icons/stock_news.png" alt="" />
+    <div class="postBody"><%- welcomeMessageHtml %></div>
+  </div>
+<% } %>
 <% if (categoryBoxes.length === 0) { %>
   <div class="categoryBox">
     <h2 class="category">

@@ -2,11 +2,13 @@ import type { FastifyInstance } from 'fastify';
 import type { Types } from 'mongoose';
 import { createCaptcha } from './services/captcha';
 import { buildCategoryBoxes, pageForPost } from './services/forum';
+import { renderPost } from './services/formatting';
 import { getOnlineStats } from './services/presence';
 import { getIPBan } from './services/ip-bans';
 import { Thread } from './schemas/threads';
 import { Post } from './schemas/posts';
 import { User } from './schemas/users';
+import { WelcomeMessage } from './schemas/welcome-message';
 
 interface PopulatedAuthor {
   _id: Types.ObjectId;
@@ -21,15 +23,22 @@ export interface ViewConfig {
 
 export async function registerRoutes(app: FastifyInstance, config: ViewConfig) {
   app.get('/', async (_, reply) => {
-    const [categoryBoxes, online, latestMember, latestThread] = await Promise.all([
-      buildCategoryBoxes(),
-      getOnlineStats(),
-      User.findOne().sort('-createdAt').select('username').lean(),
-      Thread.findOne()
-        .sort('-createdAt')
-        .populate<{ author: PopulatedAuthor }>('author', 'username')
-        .lean(),
-    ]);
+    const [categoryBoxes, welcomeMessage, online, latestMember, latestThread] =
+      await Promise.all([
+        buildCategoryBoxes(),
+        WelcomeMessage.findOne().lean(),
+        getOnlineStats(),
+        User.findOne().sort('-createdAt').select('username').lean(),
+        Thread.findOne()
+          .sort('-createdAt')
+          .populate<{ author: PopulatedAuthor }>('author', 'username')
+          .lean(),
+      ]);
+
+    const welcomeMessageHtml =
+      welcomeMessage?.enabled && welcomeMessage.content
+        ? renderPost(welcomeMessage.content, welcomeMessage.processor)
+        : null;
 
     interface LatestPostInfo {
       _id: Types.ObjectId;
@@ -63,6 +72,7 @@ export async function registerRoutes(app: FastifyInstance, config: ViewConfig) {
     return reply.view('index', {
       ...config,
       categoryBoxes,
+      welcomeMessageHtml,
       stats: {
         users: online.users,
         guests: online.guests,
