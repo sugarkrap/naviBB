@@ -117,11 +117,11 @@ export const register = async (app: FastifyInstance, config: ViewConfig) => {
     });
 
     setAuthCookie(reply, token);
-    return reply.redirect(config.boardBaseURL);
+    return reply.redirect('/');
   });
 
   app.get('/logout', async (_, reply) => {
     clearAuthCookie(reply);
-    return reply.redirect(config.boardBaseURL);
+    return reply.redirect('/');
   });
 };

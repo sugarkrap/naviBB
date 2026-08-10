@@ -37,6 +37,6 @@ export const activate = async (
     });
 
     setAuthCookie(reply, jwtToken);
-    return reply.redirect(config.boardBaseURL);
+    return reply.redirect('/');
   });
 };

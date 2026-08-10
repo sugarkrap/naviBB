@@ -85,7 +85,7 @@ export async function registerRoutes(app: FastifyInstance, config: ViewConfig) {
       httpOnly: true,
       sameSite: 'lax',
     });
-    const referer = request.headers.referer || config.boardBaseURL;
+    const referer = request.headers.referer || '/';
     return reply.redirect(referer);
   });
 

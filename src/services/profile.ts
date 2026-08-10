@@ -299,7 +299,7 @@ export const profile = async (
 
     await User.deleteOne({ _id: reply.locals.user.userId });
     clearAuthCookie(reply);
-    return reply.redirect(config.boardBaseURL);
+    return reply.redirect('/');
   });
 
   app.post('/profile/bio', async (request, reply) => {

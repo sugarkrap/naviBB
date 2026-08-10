@@ -16,7 +16,7 @@
   <body>
     <div class="mainContent">
       <header>
-        <a href="<%= boardBaseURL %>">
+        <a href="/">
           <img src="/static/logo.png" />
           <div id="headerTitle">
             <h1><%= boardName %></h1>
@@ -26,15 +26,15 @@
       </header>
       <div class="mainMenu">
         <div class="menuLinks">
-          <a class="home" href="<%= boardBaseURL %>" title="Back to the homepage">Home</a>
+          <a class="home" href="/" title="Back to the homepage">Home</a>
           <% if (user) { %>
-            <a class="search" href="<%= boardBaseURL %>search" title="Search the forum">Search</a>  
-            <a class="user" href="<%= boardBaseURL %>profile" title="Your profile"><%= user.username %></a>
-            <a class="pda" href="<%= boardBaseURL %>pda" title="Connect an older device">Connect PDA</a>
-            <a class="logout" href="<%= boardBaseURL %>logout" title="See you soon!">Logout</a>
+            <a class="search" href="/search" title="Search the forum">Search</a>
+            <a class="user" href="/profile" title="Your profile"><%= user.username %></a>
+            <a class="pda" href="/pda" title="Connect an older device">Connect PDA</a>
+            <a class="logout" href="/logout" title="See you soon!">Logout</a>
           <% } else { %>
-            <a class="login" href="<%= boardBaseURL %>login" title="Welcome back!">Login</a>
-            <a class="register" href="<%= boardBaseURL %>register" title="Want to join us?">Register</a>
+            <a class="login" href="/login" title="Welcome back!">Login</a>
+            <a class="register" href="/register" title="Want to join us?">Register</a>
           <% } %>
         </div>
       </div>
@@ -54,9 +54,9 @@
           Made with
           <img src="/static/icons/stock_3d-favourites.png" /> by
           <a href="#">sugarkrap</a><br />Icon theme: GNOME2<br />
-          <a href="<%= boardBaseURL %>privacy-policy">Privacy Policy</a>
+          <a href="/privacy-policy">Privacy Policy</a>
           <% if (user && user.isAdmin) { %>
-            | <a href="<%= boardBaseURL %>admin">Admin</a>
+            | <a href="/admin">Admin</a>
           <% } %>
         </p>
       </footer>
