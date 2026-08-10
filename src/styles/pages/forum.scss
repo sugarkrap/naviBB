@@ -142,6 +142,7 @@
   .welcomeMessageIcon {
     width: auto;
     height: auto;
+    align-self: flex-start;
   }
 
   .postBody img {
@@ -328,8 +329,6 @@
   }
 }
 
-// standalone (not nested under .postContent) since .postBody is also reused
-// bare inside .info for the welcome message
 .postBody {
   h1,
   h2,
@@ -338,7 +337,6 @@
   h5,
   h6 {
     font-weight: normal;
-    color: $secondAccentColor;
     margin: 0.5em 0 0.25em;
     line-height: 1.25;
 
