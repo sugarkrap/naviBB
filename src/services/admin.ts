@@ -1,8 +1,10 @@
 import { unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { FastifyInstance, FastifyReply } from 'fastify';
+import { z } from 'zod';
 import { Category } from '../schemas/categories';
 import { CategoryGroup } from '../schemas/category-groups';
+import { WelcomeMessage } from '../schemas/welcome-message';
 import { User } from '../schemas/users';
 import { BanLog } from '../schemas/ban-logs';
 import { ActivityLog } from '../schemas/activity-logs';
@@ -132,6 +134,21 @@ export const admin = async (
       categories: sortCategoriesForAdmin(categories),
       groups,
       UNGROUPED_BOX_NAME,
+      ...feedback,
+    });
+  };
+
+  const renderWelcomeMessage = async (
+    reply: FastifyReply,
+    feedback: { error?: string; message?: string } = {},
+  ) => {
+    const welcomeMessage =
+      (await WelcomeMessage.findOne().lean()) ??
+      (await WelcomeMessage.create({})).toObject();
+    return reply.view('admin-welcome-message', {
+      ...config,
+      user: reply.locals!.user,
+      welcomeMessage,
       ...feedback,
     });
   };
@@ -498,6 +515,43 @@ export const admin = async (
       return renderCategories(reply, { error: errors.join(' ') });
     }
     return renderCategories(reply, { message: 'Category groups saved' });
+  });
+
+  const welcomeMessageBodySchema = z.object({
+    enabled: z.string().optional(),
+    content: z.string(),
+    processor: z.enum(['bbcode', 'markdown']).default('bbcode'),
+  });
+
+  app.get('/admin/welcome-message', async (_, reply) => {
+    if (!requireAdmin(reply)) return;
+    return renderWelcomeMessage(reply);
+  });
+
+  app.post('/admin/welcome-message', async (request, reply) => {
+    const adminUser = requireAdmin(reply);
+    if (!adminUser) return;
+
+    const parseResult = welcomeMessageBodySchema.safeParse(request.body);
+    if (!parseResult.success) {
+      return renderWelcomeMessage(reply, {
+        error: parseResult.error.issues[0].message,
+      });
+    }
+
+    const welcomeMessage =
+      (await WelcomeMessage.findOne()) ?? new WelcomeMessage();
+    welcomeMessage.enabled = parseResult.data.enabled === 'on';
+    welcomeMessage.content = parseResult.data.content;
+    welcomeMessage.processor = parseResult.data.processor;
+    await welcomeMessage.save();
+
+    await logActivity(
+      actorFrom(adminUser),
+      ACTIVITY_ACTIONS.WELCOME_MESSAGE_EDIT,
+    );
+
+    return renderWelcomeMessage(reply, { message: 'Welcome message saved' });
   });
 
   app.get('/admin/users', async (_, reply) => {

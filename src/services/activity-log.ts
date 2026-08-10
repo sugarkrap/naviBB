@@ -6,6 +6,7 @@ export const ACTIVITY_ACTIONS = {
   CATEGORY_GROUP_CREATE: 'Created category group',
   CATEGORY_GROUP_EDIT: 'Edited category group',
   CATEGORY_GROUP_DELETE: 'Deleted category group',
+  WELCOME_MESSAGE_EDIT: 'Edited welcome message',
   USER_ROLE_CHANGE: 'Changed user role',
   USER_ACTIVATE: 'Activated user',
   USER_DEACTIVATE: 'Deactivated user',
