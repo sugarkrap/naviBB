@@ -231,6 +231,8 @@ const bootstrap = async () => {
   await mongoose.connect(uri);
   console.log('connected to MongoDB');
 
+  await mongoose.syncIndexes();
+
   await loadBannedIPs();
 
   try {

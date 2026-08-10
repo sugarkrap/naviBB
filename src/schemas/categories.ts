@@ -5,7 +5,6 @@ export const CategorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     description: {
       type: String,
@@ -28,5 +27,7 @@ export const CategorySchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+CategorySchema.index({ parent: 1, name: 1 }, { unique: true });
 
 export const Category = mongoose.model('Category', CategorySchema);

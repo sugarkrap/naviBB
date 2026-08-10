@@ -348,7 +348,9 @@ export const admin = async (
           );
         } catch (err) {
           if ((err as { code?: number }).code === 11000) {
-            errors.push(`A category named "${cat.name}" already exists`);
+            errors.push(
+              `A category named "${cat.name}" already exists under the same parent`,
+            );
           } else {
             throw err;
           }
@@ -389,7 +391,9 @@ export const admin = async (
           );
         } catch (err) {
           if ((err as { code?: number }).code === 11000) {
-            errors.push(`A category named "${newCat.name}" already exists`);
+            errors.push(
+              `A category named "${newCat.name}" already exists under the same parent`,
+            );
           } else {
             throw err;
           }
