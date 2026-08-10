@@ -5,7 +5,7 @@
   gap: $spacing-small;
 }
 
-.categoryRow-name {
+.navi-table .categoryRow-name {
   padding-left: calc(
     #{$spacing-small} + #{$spacing} * var(--category-depth, 0)
   );
