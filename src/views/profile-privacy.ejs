@@ -1,0 +1,21 @@
+<%- include('partials/profile-header.ejs', { user: locals.user }) %>
+<div class="tabbedView">
+  <%- include('partials/profile-tabs.ejs', { activeTab: 'privacy' }) %>
+  <div class="tabbedView-content">
+    <fieldset>
+      <legend>Your data</legend>
+      <div class="navi-button-group">
+        <a class="navi-button" href="/profile/data">
+          <img src="/static/icons/stock_save.png" /> Download
+        </a>
+        <a class="navi-button" href="/confirm-deletion">
+          <img src="/static/icons/stock_stop.png" /> Delete
+        </a>
+      </div>
+      <p>
+        Download a JSON copy of all your data, or delete your account
+        forever.
+      </p>
+    </fieldset>
+  </div>
+</div>

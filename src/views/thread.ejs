@@ -1,0 +1,75 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/stock_book_green.png" alt="" />
+    <% if (thread.locked) { %>[Locked] <% } %><%= thread.title %>
+  </h2>
+  <div class="threadMeta">
+    by <a href="/profile/<%= thread.authorId %>"><%= thread.authorName %></a>
+    in <a href="/category/<%= thread.categoryId %>"><%= thread.categoryName %></a>,
+    <%= thread.createdAt.toDateString() %>
+  </div>
+
+  <% posts.forEach((post) => { %>
+    <div class="postRow" id="post-<%= post._id %>">
+      <div class="postAuthor">
+        <a href="/profile/<%= post.authorId %>"><%= post.authorName %></a>
+        <%- include('partials/user-avatar.ejs', { avatarURL: post.avatarURL }) %>
+        <p><%= post.createdAt.toDateString() %></p>
+        <% if (post.role !== 'user') { %>
+          <p class="profileRole <%= post.role %>">
+            <img src="/static/icons/<%= post.roleIcon %>" alt="" />
+            <%= post.role %>
+          </p>
+        <% } %>
+        <% if (user && (user.isModerator || user.isAdmin) && post.authorId && user.userId !== post.authorId.toString()) { %>
+          <a class="navi-button" href="/moderator/ban/<%= post.authorId %>">
+            <img src="/static/icons/stock_stop.png" alt="" />
+            Ban
+          </a>
+        <% } %>
+      </div>
+      <div class="postContent">
+        <div class="postActions">
+          <% if (user && post.authorId && (user.userId === post.authorId.toString() || user.isModerator || user.isAdmin)) { %>
+            <a class="navi-button" href="/post/<%= post._id %>/edit">
+              <img src="/static/icons/stock_edit.png" alt="" />
+              Edit
+            </a>
+          <% } %>
+          <% if (user && (user.isModerator || user.isAdmin)) { %>
+            <form action="/post/<%= post._id %>/delete" method="post" class="inlineForm">
+              <button class="navi-button" type="submit">
+                <img src="/static/icons/stock_stop.png" alt="" />
+                Delete
+              </button>
+            </form>
+          <% } %>
+        </div>
+        <div class="postBody"><%- post.html %></div>
+        <% if (post.signature) { %>
+          <div class="postSignature"><%- post.signatureHtml %></div>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+
+  <%- include('partials/pagination.ejs', { basePath, page, totalPages }) %>
+
+  <div class="threadActions">
+    <% if (user && (user.isModerator || user.isAdmin)) { %>
+      <form action="/thread/<%= thread._id %>/lock" method="post" class="inlineForm">
+        <input type="hidden" name="page" value="<%= page %>" />
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/<%= thread.locked ? 'stock_unlock' : 'stock_lock' %>.png" alt="" />
+          <%= thread.locked ? 'Unlock' : 'Lock' %>
+        </button>
+      </form>
+    <% } %>
+    <% if (user && !thread.locked) { %>
+      <a class="navi-button" href="/thread/<%= thread._id %>/reply">
+        <img src="/static/icons/stock_news.png" alt="" />
+        Reply
+      </a>
+    <% } %>
+  </div>
+</div>

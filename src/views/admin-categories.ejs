@@ -1,0 +1,127 @@
+<h3 class="navi-title">Admin panel</h3>
+<div class="tabbedView">
+  <%- include('partials/admin-tabs.ejs', { activeTab: 'categories' }) %>
+  <div class="tabbedView-content admin">
+    <% if (locals.error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png"/>
+        <p>
+          <%= locals.error %>
+        </p>
+      </div>
+    <% } %>
+
+    <% if (locals.message) { %>
+      <div class="navi-box success">
+        <img src="/static/icons/stock_book_green.png"/>
+        <p>
+          <%= locals.message %>
+        </p>
+      </div>
+    <% } %>
+
+    <form action="/admin/categories" method="POST" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Categories</legend>
+        <table class="navi-table">
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Parent</th>
+              <th>New logo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% categories.forEach((cat) => { %>
+              <tr>
+                <td>
+                  <% if (cat.logo) { %>
+                    <img
+                      class="navi-category-logo"
+                      src="/static/categories/<%= cat.logo %>"
+                      alt="<%= cat.name %> logo"
+                    />
+                  <% } %>
+                </td>
+                <td>
+                  <input
+                    class="navi-input"
+                    type="text"
+                    name="name[<%= cat._id %>]"
+                    value="<%= cat.name %>"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="navi-input"
+                    type="text"
+                    name="description[<%= cat._id %>]"
+                    value="<%= cat.description %>"
+                  />
+                </td>
+                <td>
+                  <select class="navi-input" name="parent[<%= cat._id %>]">
+                    <option value="">(none)</option>
+                    <% categories.forEach((opt) => { %>
+                      <% if (opt._id.toString() !== cat._id.toString()) { %>
+                        <option
+                          value="<%= opt._id %>"
+                          <%= cat.parent && cat.parent.toString() === opt._id.toString() ? 'selected' : '' %>
+                        ><%= opt.name %></option>
+                      <% } %>
+                    <% }) %>
+                  </select>
+                </td>
+                <td>
+                  <input type="file" name="logo[<%= cat._id %>]" accept="image/*" />
+                  <% if (cat.logo) { %>
+                    <label class="removeLogoLabel">
+                      <input type="checkbox" name="removeLogo[<%= cat._id %>]" />
+                      Remove logo
+                    </label>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>New category</legend>
+        <div class="navi-control">
+          <label class="navi-label" for="newName">Name:</label>
+          <input
+            class="navi-input"
+            type="text"
+            name="newName"
+            id="newName"
+            placeholder="Name"
+          />
+        </div>
+        <div class="navi-control">
+          <label class="navi-label" for="newDescription">Description:</label>
+          <input
+            class="navi-input"
+            type="text"
+            name="newDescription"
+            id="newDescription"
+            placeholder="Description"
+          />
+        </div>
+        <div class="navi-control">
+          <label class="navi-label" for="newLogo">Logo:</label>
+          <input type="file" name="newLogo" id="newLogo" accept="image/*" />
+        </div>
+      </fieldset>
+
+      <div class="navi-button-group">
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/stock_save.png" /> Validate
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

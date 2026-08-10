@@ -1,0 +1,22 @@
+services:
+  navi:
+    build:
+      context: .
+      target: release
+    environment:
+      PORT: ${PORT:-8080}
+      MONGO_URI: mongodb://mongo:27017/navibb
+    ports:
+      - '${PORT:-8080}:${PORT:-8080}'
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: docker.io/library/mongo:8
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo-data:

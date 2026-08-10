@@ -1,0 +1,25 @@
+<div class="navi-box error">
+  <img src="/static/icons/stock_stop.png" alt="" />
+  <p>
+    Your account has been banned.
+  </p>
+</div>
+
+<% if (banReason) { %>
+  <p><strong>Reason:</strong> <%= banReason %></p>
+<% } %>
+
+<% if (bannedUntil) { %>
+  <p>
+    <strong>Banned until:</strong>
+    <% if (bannedUntil.getFullYear() > 9000) { %>
+      Permanent
+    <% } else { %>
+      <%= bannedUntil.toDateString() %>
+    <% } %>
+  </p>
+<% } else { %>
+  <p><strong>Banned until:</strong> Permanent</p>
+<% } %>
+
+<p>You can <a href="/logout">log out</a>.</p>

@@ -1,0 +1,109 @@
+<div class="searchBox">
+  <form action="/search" method="GET" class="searchForm">
+    <input 
+      type="text" 
+      name="q" 
+      class="navi-input" 
+      placeholder="Search users, threads, posts..." 
+      value="<%= locals.query %>"
+      minlength="2"
+    />
+    <button type="submit" class="navi-button">
+      <img src="/static/icons/stock_search.png" alt="Search" /> Search
+    </button>
+  </form>
+
+  <% if (locals.query && locals.query.length >= 2) { %>
+    <div class="searchResults">
+      <% if (locals.resultCount === 0) { %>
+        <p class="noResults">No results found for "<%= locals.query %>"</p>
+      <% } else { %>
+        <div class="tabbedView search">
+          <div class="tabbedView-tabs">
+            <a 
+              class="tabbedView-tab users <%= locals.activeTab === 'users' ? 'active' : '' %>"
+              href="/search?q=<%= encodeURIComponent(locals.query) %>&tab=users"
+            >
+              Users <span class="badge"><%= locals.users.length %></span>
+            </a>
+            <a 
+              class="tabbedView-tab threads <%= locals.activeTab === 'threads' ? 'active' : '' %>"
+              href="/search?q=<%= encodeURIComponent(locals.query) %>&tab=threads"
+            >
+              Threads <span class="badge"><%= locals.threads.length %></span>
+            </a>
+            <a 
+              class="tabbedView-tab posts <%= locals.activeTab === 'posts' ? 'active' : '' %>"
+              href="/search?q=<%= encodeURIComponent(locals.query) %>&tab=posts"
+            >
+              Posts <span class="badge"><%= locals.posts.length %></span>
+            </a>
+          </div>
+
+          <div class="tabbedView-content">
+            <% if (locals.activeTab === 'users') { %>
+              <div class="searchTab users">
+                <% if (locals.users.length === 0) { %>
+                  <p class="noResultsTab">No users found</p>
+                <% } else { %>
+                  <div class="searchResultsList">
+                    <% locals.users.forEach(user => { %>
+                      <div class="searchResultItem user">
+                        <div class="userItemContent">
+                          <%- include('partials/user-avatar.ejs', { avatarURL: user.avatarURL }) %>
+                          <div class="userInfo">
+                            <a href="<%= user.url %>" class="resultTitle"><%- user.title %></a>
+                            <% if (user.bio) { %>
+                              <p class="userBio"><%- user.bio %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (locals.activeTab === 'threads') { %>
+              <div class="searchTab threads">
+                <% if (locals.threads.length === 0) { %>
+                  <p class="noResultsTab">No threads found</p>
+                <% } else { %>
+                  <div class="searchResultsList">
+                    <% locals.threads.forEach(thread => { %>
+                      <div class="searchResultItem thread">
+                        <div class="resultHeader">
+                          <a href="<%= thread.url %>" class="resultTitle"><%- thread.title %></a>
+                          <a href="/profile/<%= thread.authorId %>" class="resultMeta">by <%= thread.authorName %></a>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                <% } %>
+              </div>
+            <% } else if (locals.activeTab === 'posts') { %>
+              <div class="searchTab posts">
+                <% if (locals.posts.length === 0) { %>
+                  <p class="noResultsTab">No posts found</p>
+                <% } else { %>
+                  <div class="searchResultsList">
+                    <% locals.posts.forEach(post => { %>
+                      <div class="searchResultItem post">
+                        <div class="resultHeader">
+                          <a href="<%= post.url %>" class="resultTitle"><%- post.title %></a>
+                          <a href="/profile/<%= post.authorId %>" class="resultMeta">by <%= post.authorName %></a>
+                        </div>
+                        <p class="resultDescription"><%- post.description %></p>
+                      </div>
+                    <% }); %>
+                  </div>
+                <% } %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } else if (locals.query && locals.query.length < 2) { %>
+    <p class="searchHint">Search query must be at least 2 characters long</p>
+  <% } %>
+</div>

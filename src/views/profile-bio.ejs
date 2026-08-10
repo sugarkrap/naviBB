@@ -1,0 +1,41 @@
+<%- include('partials/profile-header.ejs', { user: locals.user }) %>
+<div class="tabbedView">
+  <%- include('partials/profile-tabs.ejs', { activeTab: 'bio' }) %>
+  <div class="tabbedView-content profile">
+    <% if (locals.error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png"/>
+        <p>
+          <%= locals.error %>
+        </p>
+      </div>
+    <% } %>
+
+    <% if (locals.message) { %>
+      <div class="navi-box success">
+        <img src="/static/icons/stock_book_green.png"/>
+        <p>
+          <%= locals.message %>
+        </p>
+      </div>
+    <% } %>
+
+    <form action="/profile/bio" method="POST">
+      <fieldset class="bioFieldset">
+        <legend>Bio</legend>
+        <textarea
+          class="navi-input"
+          name="bio"
+          id="bio"
+          rows="6"
+          maxlength="128"
+        ><%= locals.user.bio || '' %></textarea>
+        <div class="profileFormAction">
+          <button class="navi-button" type="submit">
+            <img src="/static/icons/stock_save.png" /> Save bio
+          </button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

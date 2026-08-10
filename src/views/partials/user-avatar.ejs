@@ -1,0 +1,7 @@
+<div class="navi-avatar">
+    <% if (typeof avatarURL === 'undefined' || avatarURL === null) { %>
+        <img src="/static/stock_unknown.png" alt="Avatar" />
+    <% } else { %>
+        <img src="<%= avatarURL %>" alt="Avatar" />
+    <% } %>
+</div>

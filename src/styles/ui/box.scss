@@ -1,0 +1,19 @@
+.navi-box {
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-small;
+  border: 1px solid;
+  border-radius: $border-radius;
+  padding: $spacing-small;
+  align-items: center;
+
+  &.error {
+    border-color: #681a1a;
+    background-color: #ffa3a3;
+  }
+
+  &.success {
+    border-color: #005000;
+    background-color: #ccffcc;
+  }
+}

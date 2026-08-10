@@ -1,0 +1,254 @@
+fieldset {
+  // fuck it we ball
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-small;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border-radius: $border-radius;
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+
+  padding: $spacing-small;
+  margin: 0;
+
+  legend {
+    color: #2d27758e;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-small;
+  }
+
+  p {
+    font-size: 0.8em; // i think i fucked up the font size
+    flex-basis: 100%;
+    text-align: center;
+  }
+}
+
+.profilePage {
+  display: flex;
+  gap: 1em;
+  align-items: flex-start;
+}
+
+.profileSidebar {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 0.4em;
+  overflow: hidden;
+
+  //same idea as .info
+  background: rgb(230, 230, 230);
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+
+  padding-bottom: $spacing-small; // yeah this spacing hell is something else
+
+  p {
+    margin: 0;
+    font-size: 0.85em;
+    padding: 0.2em;
+    text-align: center;
+  }
+
+  .navi-button {
+    // this is hacky...
+    font-size: 0.9em;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .profileBio {
+    margin: 0 $spacing;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+}
+
+.profileUsername {
+  margin: 0;
+  color: white;
+  text-shadow: -1px -1px 0 #000;
+  width: 100%;
+  font-weight: 400;
+  text-align: center;
+  background: linear-gradient(
+    to bottom,
+    $accentColor 0%,
+    $midAccentColor 45%,
+    $secondAccentColor 100%
+  );
+}
+
+.profileRole {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em;
+  justify-content: center;
+
+  img {
+    width: 16px; // let's cheat a little: the icons are 24x24 but sadly i haven't find them in 16x16
+    height: 16px;
+  }
+
+  &.admin {
+    color: rgb(184, 14, 14);
+  }
+
+  &.moderator {
+    color: rgb(63, 17, 170);
+  }
+}
+
+.profileMemberSince {
+  color: #3a3a3a;
+}
+
+.bannedBanner {
+  width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2em;
+
+  font-size: 0.9em; // this is heell
+
+  p {
+    margin: 0;
+  }
+}
+
+.profileModeratorActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  width: 100%;
+  padding: 0 0.5em;
+  box-sizing: border-box;
+
+  .navi-button,
+  .inlineForm button {
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.profileContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .subCategoryRow {
+    padding-left: $spacing-small;
+    border-bottom: 1px solid #2d27758e;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.profileStats {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
+}
+
+.profileStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .profileStatNumber {
+    font-size: 2.2em;
+    font-weight: bold;
+  }
+
+  .profileStatLabel {
+    font-size: 0.85em;
+    color: #555;
+  }
+}
+
+.activityType {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  flex-shrink: 0;
+  background: rgba(128, 128, 128, 0.281);
+  font-size: 0.8em;
+}
+
+.bioFieldset {
+  textarea {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+}
+
+.profileFormAction {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5em;
+}
+
+.banInfo {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: $spacing;
+  gap: 0.3em;
+
+  margin: $spacing; // shit my first real margin...
+
+  p {
+    margin: 0;
+  }
+}
+
+.banActions {
+  display: flex;
+  gap: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banIPControl {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3em;
+}
+
+.banIPLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.banTypeHint {
+  margin: 0.3em 0 0 0;
+  font-size: 0.9em;
+  color: #555;
+}

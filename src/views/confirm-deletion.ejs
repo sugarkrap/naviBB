@@ -1,0 +1,18 @@
+<h3 class="navi-title">Delete your account</h3>
+<div class="navi-box error">
+  <img src="/static/icons/stock_stop.png"/>
+  <p>
+    Are you sure you want to delete your account,
+    <%= locals.user.username %>? This cannot be undone.
+  </p>
+</div>
+<form action="/confirm-deletion" method="POST">
+  <div class="navi-button-group">
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_stop.png" /> Yes, delete my account
+    </button>
+    <a class="navi-button" href="/profile/privacy">
+      No, take me back
+    </a>
+  </div>
+</form>

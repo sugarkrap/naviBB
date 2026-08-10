@@ -1,0 +1,19 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/stock_book_green.png" alt="" />
+    Reply to: <%= thread.title %>
+  </h2>
+  <form class="createThreadForm" action="/thread/<%= thread._id %>/reply" method="post">
+    <% if (error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png" alt="" />
+        <p><%= error %></p>
+      </div>
+    <% } %>
+    <%- include('partials/rich-text-editor.ejs', { content, processor }) %>
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_save.png" alt="" />
+      Post reply
+    </button>
+  </form>
+</div>

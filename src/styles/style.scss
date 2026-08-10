@@ -1,0 +1,330 @@
+@import './theme.scss';
+
+@import './mixins.scss';
+@import './basic.scss';
+@import './layout.scss';
+
+// now, each component
+@import './menu/index.scss';
+@import './footer.scss';
+
+// and our ui components
+@import './ui/buttons.scss';
+@import './ui/inputs.scss';
+@import './ui/label.scss';
+@import './ui/control.scss';
+@import './ui/box.scss';
+@import './ui/titles.scss';
+@import './ui/tab.scss';
+@import './ui/avatar.scss';
+@import './ui/table.scss';
+
+// page specific (todo: load them dynamically instead of all at once, it WILL overload a Pentium II)
+@import './pages/login.scss';
+@import './pages/forum.scss';
+@import './pages/profile.scss';
+@import './pages/admin.scss';
+@import './pages/pda.scss';
+@import './pages/search.scss';
+
+//here remains the work in progress from the mockup
+//edit: this was such a bad idea leaving this here... now my theme depends on it
+#content {
+  padding: 1em;
+  background-color: #fff;
+  border: 1px solid #2e2775;
+  border-top: none;
+  border-radius: 0 0 0.5em 0.5em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.category {
+  color: #fff;
+  background: linear-gradient(to bottom, #6fd0ff 0%, #2e8fe8 45%, #0b57c7 100%);
+  border-radius: 0.5em 0.5em 0 0;
+  padding: 0.2em 0.5em;
+  text-shadow: -1px -1px 0 #000;
+  box-shadow:
+    inset 0px 1px 0px rgba(255, 255, 255, 0.486),
+    0 0 5px rgba(0, 0, 0, 0.452);
+
+  font-weight: 400;
+  font-size: 0.9em;
+
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}
+
+.categoryBox {
+  border: 1px solid #2d27758e;
+  border-radius: 0.5em;
+  font-size: 0.83em;
+}
+
+.subCategoryRow {
+  display: flex;
+  gap: 0.5em;
+}
+
+.subCategory {
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  gap: 0.5em;
+  flex: 1;
+  min-width: 0;
+}
+
+.subCategory:hover > .subCategoryText {
+  text-decoration: underline;
+}
+
+.subCategory h3 {
+  color: #214acd;
+}
+
+/* 
+.subCategoryIcon,
+.subCategoryStats {
+  background: rgba(128, 128, 128, 0.281);
+  width: 64px;
+  text-align: center;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subCategoryIcon img {
+  width: 36px;
+  height: 36px;
+}
+
+.subCategoryStats {
+  width: 100px;
+  font-size: 0.8em;
+  padding: 0.2em 0.5em;
+}
+
+.subCategoryStats,
+.subCategoryLastPost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.subCategoryLastPost {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.subCategoryLastPost a {
+  color: #214acd;
+  text-decoration: none;
+}
+
+.subCategoryLastPost a:hover {
+  text-decoration: underline;
+}
+
+.subCategoryRowAlt {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.subsubCategoryRow {
+  display: flex;
+  gap: 0.5em;
+  padding: 0.2em 0.5em;
+  padding-left: 64px;
+  align-items: center;
+}
+
+.subsubCategoryRowAlt {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.subsubCategoryRow a {
+  color: #214acd;
+  text-decoration: none;
+}
+
+.subsubCategoryRow a:hover {
+  text-decoration: underline;
+}
+
+.info {
+  border: 1px solid #2d27758e;
+  border-radius: 0.5em;
+  padding: 1em 0.5em;
+  font-size: 0.8em;
+  background: rgb(230, 230, 230);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.486);
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.info img {
+  width: 48px;
+  height: 48px;
+  margin-right: 1em;
+}
+
+.info a:not(.navi-button) {
+  color: #214acd;
+  text-decoration: none;
+}
+
+.info a:hover {
+  text-decoration: underline;
+}
+
+#mainInfo {
+  flex-direction: column;
+  align-items: start;
+}
+
+#ircEmulator {
+  width: 100%;
+  height: 300px;
+  font-size: 0.9em;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#ircEmulator .tabBar {
+  display: flex;
+  flex-direction: row;
+  padding: 0 1em;
+  padding-top: 0.5em;
+  overflow-y: hidden;
+  overflow-x: auto;
+  background: #dddddd;
+}
+
+#ircEmulator .tabBar .tab {
+  background: #cccccc;
+  height: 20px;
+  padding: 0 0.5em;
+  margin: 0 8px;
+  display: flex;
+  align-items: center;
+  box-shadow:
+    inset 0 1px #000,
+    inset 0 2px #ccc,
+    inset 0 3px #ddd;
+  cursor: pointer;
+}
+
+#ircEmulator .tabBar .tab::before {
+  display: block;
+  content: '';
+  background: url(tab.svg) no-repeat top 1px left -1px;
+  width: 14px;
+  height: 23px;
+  margin-left: -14px;
+}
+
+#ircEmulator .tabBar .tab::after {
+  display: block;
+  content: '';
+  background: url(tab.svg) no-repeat top 1px right -1px;
+  width: 14px;
+  height: 23px;
+  margin-right: -14px;
+}
+
+#ircEmulator .tabBar .tab.active {
+  background: #eee;
+  font-weight: bold;
+  z-index: 1;
+}
+
+#ircEmulator .tabBar .tab.active::before {
+  background-image: url(tab-selected.svg);
+}
+
+#ircEmulator .tabBar .tab.active::after {
+  background-image: url(tab-selected.svg);
+}
+
+#ircEmulator .activeTab {
+  flex: 1;
+  background: #eee;
+  border-top: 1px solid #000;
+  margin-top: -1px;
+  display: flex;
+}
+
+#ircEmulator .chatWindow {
+  flex: 1;
+  padding: 0.5em;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 1em;
+  background: white;
+  overflow-y: auto;
+  margin: 0.5em;
+  border: 1px solid #000;
+  box-shadow:
+    -1px -1px #888,
+    1px 1px #fff;
+}
+
+#ircEmulator .chatWindow .chatMessage {
+  margin-bottom: 0.5em;
+}
+
+.chatUser.exampleRed {
+  color: red;
+}
+
+.chatUser.exampleBlue {
+  color: blue;
+}
+
+#ircEmulator .chatInput {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5em;
+  border-top: 1px solid #ccc;
+}
+
+#ircEmulator .chatInput input[type='text'] {
+  flex: 1;
+  padding: 0.3em;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  margin-right: 0.5em;
+}
+
+#ircEmulator .chatInput button[type='submit'] {
+  padding: 0.3em 1em;
+  border: none;
+  border-radius: 0.5em;
+  background-image: linear-gradient(180deg, #5cd0ff, #214acd 50%, #5cd0ff);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.719);
+  border: 1px solid rgba(0, 0, 0, 0.473);
+  cursor: pointer;
+  color: #fff;
+
+  display: flex;
+  gap: 0.5em;
+}
+
+#ircEmulator .chatInput button[type='submit']:active {
+  box-shadow:
+    inset 3px 3px 5px rgba(0, 0, 0, 0.466),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.719);
+}
+*/

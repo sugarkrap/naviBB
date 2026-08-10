@@ -1,0 +1,110 @@
+<% const editorLegend = typeof legend !== 'undefined' ? legend : 'Post'; %>
+<% const editorField = typeof fieldName !== 'undefined' ? fieldName : 'content'; %>
+<% const editorProcessor = typeof processorName !== 'undefined' ? processorName : 'processor'; %>
+<% const editorValue = typeof content !== 'undefined' ? content : ''; %>
+<% const editorMode = typeof processor !== 'undefined' ? processor : 'bbcode'; %>
+<fieldset class="postFieldset">
+  <legend><%= editorLegend %></legend>
+  <div class="postToolbar">
+    <div class="postToolbarButtons">
+      <button type="button" onclick="postWrap('b')" title="Bold"><strong>B</strong></button>
+      <button type="button" onclick="postWrap('i')" title="Italic"><em>I</em></button>
+      <button type="button" onclick="postWrap('u')" title="Underline"><u>U</u></button>
+      <button type="button" onclick="postLink()" title="Link">Link</button>
+      <button type="button" onclick="postImage()" title="Image">Img</button>
+    </div>
+    <div class="postToolbarMode">
+      <label>
+        <input type="radio" name="<%= editorProcessor %>" value="bbcode" <%= editorMode === 'bbcode' ? 'checked' : '' %> onclick="setPostMode('bbcode')" />
+        BBCode
+      </label>
+      <label>
+        <input type="radio" name="<%= editorProcessor %>" value="markdown" <%= editorMode === 'markdown' ? 'checked' : '' %> onclick="setPostMode('markdown')" />
+        Markdown
+      </label>
+    </div>
+  </div>
+  <textarea class="navi-input" id="postContent" name="<%= editorField %>" rows="10" required><%= editorValue %></textarea>
+</fieldset>
+
+<script>
+(function() {
+  var postMode = '<%= editorMode %>';
+  window.setPostMode = function(mode) { postMode = mode; };
+
+  var URL_RE = /^https?:\/\/[^\s<>"]+$/i;
+
+  function getSelection(ta) {
+    return { start: ta.selectionStart, end: ta.selectionEnd };
+  }
+
+  function replaceSelection(ta, replacement, saved) {
+    saved = saved || getSelection(ta);
+    var text = ta.value;
+    ta.value = text.substring(0, saved.start) + replacement + text.substring(saved.end);
+    ta.focus();
+    var cursor = saved.start + replacement.length;
+    ta.setSelectionRange(cursor, cursor);
+  }
+
+  function promptUrl(ta, saved, title, defaultUrl) {
+    var url = window.prompt(title, defaultUrl);
+    if (!url || url === defaultUrl) return null;
+    url = url.trim();
+    if (!URL_RE.test(url)) {
+      window.alert('Please enter a valid URL starting with http:// or https://');
+      return null;
+    }
+    return url;
+  }
+
+  window.postWrap = function(tag) {
+    var ta = document.getElementById('postContent');
+    var saved = getSelection(ta);
+    var text = ta.value;
+    var sel = text.substring(saved.start, saved.end);
+    var open = '', close = '';
+    if (postMode === 'bbcode') {
+      if (tag === 'b') { open = '[b]'; close = '[/b]'; }
+      else if (tag === 'i') { open = '[i]'; close = '[/i]'; }
+      else if (tag === 'u') { open = '[u]'; close = '[/u]'; }
+    } else {
+      if (tag === 'b') { open = '**'; close = '**'; }
+      else if (tag === 'i') { open = '*'; close = '*'; }
+      else if (tag === 'u') { open = '__'; close = '__'; }
+    }
+    var replacement = open + sel + close;
+    replaceSelection(ta, replacement, saved);
+    ta.setSelectionRange(saved.start + open.length, saved.start + open.length + sel.length);
+  };
+
+  window.postLink = function() {
+    var ta = document.getElementById('postContent');
+    var saved = getSelection(ta);
+    var url = promptUrl(ta, saved, 'URL:', 'https://');
+    if (!url) return;
+    var sel = ta.value.substring(saved.start, saved.end) || url;
+    var replacement = '';
+    if (postMode === 'bbcode') {
+      replacement = '[url=' + url + ']' + sel + '[/url]';
+    } else {
+      replacement = '[' + sel + '](' + url + ')';
+    }
+    replaceSelection(ta, replacement, saved);
+  };
+
+  window.postImage = function() {
+    var ta = document.getElementById('postContent');
+    var saved = getSelection(ta);
+    var url = promptUrl(ta, saved, 'Image URL:', 'https://');
+    if (!url) return;
+    var replacement = '';
+    if (postMode === 'bbcode') {
+      replacement = '[img]' + url + '[/img]';
+    } else {
+      replacement = '![](' + url + ')';
+    }
+    replaceSelection(ta, replacement, saved);
+  };
+})();
+</script>

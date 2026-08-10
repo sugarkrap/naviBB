@@ -1,0 +1,44 @@
+.mainContent {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-bottom: 2em;
+}
+
+header {
+  a {
+    display: flex;
+    gap: 1em;
+    padding: 1em 0;
+    justify-content: center;
+    text-decoration: none;
+    align-items: center;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 128px;
+      max-height: 128px;
+    }
+  }
+
+  h1,
+  h3 {
+    color: $globalBackgroundedTextColor;
+    text-shadow: $globalTextShadow;
+  }
+}
+
+.cookieBanner.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 0;
+
+  p {
+    margin: 0;
+  }
+}

@@ -1,0 +1,15 @@
+<% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (page > 1) { %>
+      <a href="<%= basePath %>?page=<%= page - 1 %>">&laquo; Previous</a>
+    <% } else { %>
+      <span class="disabled">&laquo; Previous</span>
+    <% } %>
+    <span class="pageInfo">Page <%= page %> of <%= totalPages %></span>
+    <% if (page < totalPages) { %>
+      <a href="<%= basePath %>?page=<%= page + 1 %>">Next &raquo;</a>
+    <% } else { %>
+      <span class="disabled">Next &raquo;</span>
+    <% } %>
+  </div>
+<% } %>

@@ -1,0 +1,10 @@
+node_modules
+build/
+dist/
+.env
+.pnpm-store
+.vscode
+cache/*
+!cache/.gitkeep
+ctrial
+legacy

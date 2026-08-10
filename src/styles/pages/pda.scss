@@ -1,0 +1,59 @@
+.pda-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.pda-heading {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.pda-timer,
+.pda-password-display {
+  font-family: monospace;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+
+.pda-password-display {
+  padding: 1.5rem;
+  font-size: 2rem;
+  word-break: break-all;
+}
+
+.pda-timer {
+  font-size: 1.5rem;
+  min-width: 80px;
+}
+
+.pda-buttons {
+  display: flex;
+  gap: $spacing-small;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pda-info {
+  // really need to put in common the info box
+  background: #f0f0f0;
+  border: 1px solid #999;
+  padding: $spacing-small;
+  border-radius: 4px;
+  max-width: 400px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.pda-inactive {
+  text-align: center;
+  padding: 1rem;
+  p {
+    margin: 0.5rem 0;
+  }
+}

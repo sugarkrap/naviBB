@@ -1,0 +1,16 @@
+.navi-input {
+  box-sizing: border-box;
+  height: 25px; // i am so not achieving pixel perfect match with the buttons, help
+  padding: 0.3em;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: $border-radius;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 -1px 0px rgba(253, 253, 253, 0.9);
+  color: #202020; //easier on the eyes
+
+  &:focus {
+    border-color: $secondAccentColor;
+  }
+}

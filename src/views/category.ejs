@@ -1,0 +1,64 @@
+<div class="info">
+  <div class="categoryInfo">
+    <% if (category.logo) { %>
+      <img src="/static/categories/<%= category.logo %>" alt="" />
+    <% } else { %>
+      <img src="/static/icons/category-default.png" alt="" />
+    <% } %>
+    <div class="categoryDescription">
+      <h3 class="navi-title"><%= category.name %></h3>
+      <p><%= category.description %></p>
+    </div>
+    <a class="navi-button createThreadButton" title="Create a new thread" href="/category/<%= category._id %>/create-thread"><img src="/static/icons/stock_news.png" alt="Create thread" />Create thread</a>
+  </div>
+</div>
+
+<% if (childItems.length > 0) { %>
+  <div class="categoryBox">
+    <h2 class="category">
+      <img src="/static/icons/folder-24.png" alt="" />Sub category
+    </h2>
+    <%- include('partials/category-rows.ejs', { items: childItems, root: false }) %>
+  </div>
+<% } %>
+
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/stock_book_green.png" alt="" />Threads
+  </h2>
+  <div class="categoryRows">
+    <% if (threads.length === 0) { %>
+      <p class="emptyIsland">No threads here yet.</p>
+    <% } %>
+    <% threads.forEach((thread) => { %>
+      <div class="subCategoryRow">
+        <div class="subCategory">
+          <div class="subCategoryIcon">
+            <img src="/static/icons/category-default.png" alt="" />
+          </div>
+          <div class="subCategoryText">
+            <h3 class="subCategoryTitle"><a href="/thread/<%= thread._id %>"><% if (thread.locked) { %>[Locked] <% } %><%= thread.title %></a></h3>
+            <p class="subCategoryDescription">
+              by <a href="/profile/<%= thread.authorId %>"><%= thread.authorName %></a>,
+              <%= thread.createdAt.toDateString() %>
+            </p>
+          </div>
+        </div>
+        <div class="subCategoryLastPost">
+          <% if (thread.lastPost) { %>
+            <p class="subCategoryLastPostTitle">
+              <a href="/thread/<%= thread._id %>?page=<%= thread.lastPost.page %>#post-<%= thread.lastPost._id %>">Last post</a>
+              by <a href="/profile/<%= thread.lastPost.authorId %>"><%= thread.lastPost.authorName %></a>
+            </p>
+            <p class="subCategoryLastPostAuthor">
+              <%= thread.lastPost.createdAt.toDateString() %>
+            </p>
+          <% } else { %>
+            <p class="subCategoryLastPostTitle">No posts yet</p>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+  <%- include('partials/pagination.ejs', { basePath, page, totalPages }) %>
+</div>

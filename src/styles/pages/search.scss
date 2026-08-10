@@ -1,0 +1,155 @@
+.searchBox {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchForm {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 0 1rem 0;
+
+  input {
+    flex: 1;
+    max-width: none;
+  }
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.searchHint {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.searchResults {
+  margin-top: 0;
+}
+
+.noResultsTab {
+  text-align: center;
+  color: #999;
+  padding: 1rem;
+}
+
+.tabbedView.search {
+  .tabbedView-tab {
+    &.users {
+      background-image: url('icons/config-users.png');
+    }
+
+    &.threads {
+      background-image: url('icons/stock_news.png');
+    }
+
+    &.posts {
+      background-image: url('icons/stock_book_green.png');
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    margin-left: 0.3rem;
+  }
+}
+
+.searchResultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.searchResultItem {
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+  padding: $spacing-small;
+  background: #fff;
+
+  &.user {
+    padding: $spacing-small;
+  }
+}
+
+.userItemContent {
+  display: flex;
+  gap: $spacing-small;
+  align-items: center;
+
+  .navi-avatar {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+
+    img {
+      max-width: 64px;
+      max-height: 64px;
+    }
+  }
+}
+
+.userInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.userBio {
+  color: #000;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.resultTitle {
+  font-weight: normal;
+  color: #2e2775;
+  text-decoration: none;
+  word-break: break-word;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.resultMeta {
+  font-size: 0.9rem;
+  color: #000;
+  text-decoration: none;
+  margin-left: auto;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.resultDescription {
+  color: #000;
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.search-highlight {
+  background-color: #ffeb3b;
+  font-weight: bold;
+  padding: 0 2px;
+}

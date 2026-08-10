@@ -1,0 +1,77 @@
+<h3 class="navi-title">Admin panel</h3>
+<div class="tabbedView">
+  <%- include('partials/admin-tabs.ejs', { activeTab: 'users' }) %>
+  <div class="tabbedView-content admin">
+    <% if (locals.error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png"/>
+        <p>
+          <%= locals.error %>
+        </p>
+      </div>
+    <% } %>
+
+    <% if (locals.message) { %>
+      <div class="navi-box success">
+        <img src="/static/icons/stock_book_green.png"/>
+        <p>
+          <%= locals.message %>
+        </p>
+      </div>
+    <% } %>
+
+    <form action="/admin/users" method="POST">
+      <fieldset>
+        <legend>Users</legend>
+        <table class="navi-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Password</th>
+              <th>Active?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach((u) => { %>
+              <tr>
+                <td><%= u.username %></td>
+                <td><%= u.email %></td>
+                <td>
+                  <select class="navi-input" name="role[<%= u._id %>]">
+                    <% ['user', 'moderator', 'admin'].forEach((r) => { %>
+                      <option value="<%= r %>" <%= u.role === r ? 'selected' : '' %>><%= r %></option>
+                    <% }) %>
+                  </select>
+                </td>
+                <td>
+                  <button
+                    class="navi-button"
+                    type="submit"
+                    formaction="/admin/users/<%= u._id %>/reset-password"
+                  >
+                    Reset
+                  </button>
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="active[<%= u._id %>]"
+                    <%= u.isActive ? 'checked' : '' %>
+                  />
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <div class="navi-button-group">
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/stock_save.png" /> Validate
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

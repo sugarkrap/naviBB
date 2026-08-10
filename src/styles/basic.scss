@@ -1,0 +1,26 @@
+html,
+body {
+  background: url('background.jpeg') no-repeat center center fixed;
+  font-family: $globalFont;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  @include reset;
+}
+
+a {
+  color: $globalLinkColor;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

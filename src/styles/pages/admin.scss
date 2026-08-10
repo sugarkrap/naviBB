@@ -1,0 +1,45 @@
+.admin form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: $spacing-small;
+}
+
+.removeLogoLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin-top: 0.3em;
+  white-space: nowrap;
+}
+
+.banLogIP {
+  font-family: monospace;
+  color: #555;
+}
+
+.banLogStatus {
+  padding: 0.1em 0.5em;
+  border-radius: $border-radius;
+  font-size: 0.85em;
+
+  &.active {
+    background: #ffa3a3;
+    color: #681a1a;
+  }
+
+  &.inactive {
+    background: #ccffcc;
+    color: #005000;
+  }
+}
+
+.banLogActions {
+  display: flex;
+  gap: 0.4em;
+  align-items: center;
+
+  form {
+    display: inline;
+  }
+}

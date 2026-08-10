@@ -1,0 +1,86 @@
+.tabbedView {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .tabbedView-tabs {
+    display: flex;
+    justify-content: center;
+    height: 37px;
+    padding: 0 $spacing-small;
+    overflow: hidden;
+
+    background: linear-gradient(
+      to bottom,
+      $accentColor 0%,
+      $midAccentColor 45%,
+      $secondAccentColor 100%
+    );
+    border-radius: $border-radius $border-radius 0 0;
+    box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.486);
+
+    .tabbedView-tab {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 $spacing 0 2em;
+
+      color: $globalBackgroundedTextColor;
+      text-shadow: -1px -1px 0 #000; // same cool ass effect as the menu
+      text-decoration: none;
+
+      background: no-repeat 10px center;
+      background-size: 16px;
+
+      cursor: pointer;
+
+      &:hover,
+      &.active {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      &.active {
+        font-weight: bold;
+      }
+
+      &.general {
+        background-image: url('icons/config-users.png');
+      }
+      &.bio {
+        background-image: url('icons/stock_book_green.png');
+      }
+      &.signature {
+        background-image: url('icons/stock_news.png');
+      }
+      &.password {
+        background-image: url('icons/stock_save.png');
+      }
+      &.privacy {
+        background-image: url('icons/stock_book_green.png');
+      }
+      &.categories {
+        background-image: url('icons/stock_3d-favourites.png');
+      }
+      &.users {
+        background-image: url('icons/config-users.png');
+      }
+      &.banlog {
+        background-image: url('icons/stock_stop.png');
+      }
+      &.activity-log {
+        background-image: url('icons/stock_book_green.png');
+      }
+    }
+  }
+
+  .tabbedView-content {
+    flex: 1;
+    overflow: auto;
+    padding: $spacing-small;
+
+    background: #fff;
+    border: 1px solid #2e2775;
+    border-top: none;
+    border-radius: 0 0 $border-radius $border-radius;
+  }
+}

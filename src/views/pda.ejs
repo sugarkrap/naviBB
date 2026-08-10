@@ -1,0 +1,85 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/music-player-24.png" alt="" />
+    Connect PDA
+  </h2>
+  <% if (locals.isTempPasswordActive) { %>
+    <div class="pda-container">
+        <% if (locals.message) { %>
+            <div class="navi-box success">
+                <img src="/static/icons/stock_book_green.png" />
+                <p><%= locals.message %></p>
+            </div>
+        <% } %>
+      <div class="pda-heading">
+        <p>Use this password on your older PDA device:</p>
+      </div>
+
+      <div class="pda-password-display" id="passwordDisplay">
+        <%= locals.tempPassword %>
+      </div>
+
+      <div class="pda-timer" id="timer">
+        <%= Math.floor(locals.secondsRemaining / 60) %>:<%= (locals.secondsRemaining % 60).toString().padStart(2, '0') %>
+      </div>
+
+      <div class="pda-info">
+        <p>This temporary password is valid for 10 minutes.</p>
+        <p>Log in with your email and this password on your PDA device.</p>
+        <p>You can generate a new one anytime or disable it completely.</p>
+      </div>
+
+      <div class="pda-buttons">
+        <form action="/pda/generate" method="post">
+          <button class="navi-button" type="submit">
+            <img src="/static/icons/stock_news.png" />
+            Generate New
+          </button>
+        </form>
+        <form action="/pda/disable" method="post">
+          <button class="navi-button" type="submit">
+            <img src="/static/icons/stock_stop.png" />
+            Turn Off
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let secondsRemaining = <%= locals.secondsRemaining %>;
+      const timerElement = document.getElementById('timer');
+
+      const updateTimer = () => {
+        if (secondsRemaining <= 0) {
+          timerElement.textContent = '0:00';
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+          return;
+        }
+
+        const minutes = Math.floor(secondsRemaining / 60);
+        const seconds = (secondsRemaining % 60).toString().padStart(2, '0');
+        timerElement.textContent = minutes + ':' + seconds;
+
+        secondsRemaining--;
+      };
+
+      // i hope this works on IE5 at least
+      setInterval(updateTimer, 1000);
+    </script>
+  <% } else { %>
+    <div class="pda-inactive">
+      <p>No temporary password is currently active.</p>
+      <p>Generate one to connect your older PDA if it has no HTTPS capability or if you're on an unsafe network</p>
+      <form action="/pda/generate" method="post">
+        <div class="navi-button-group regular-button">
+            <button class="navi-button" type="submit">
+            <img src="/static/icons/stock_news.png" />
+            Generate temp password
+            </button>
+        </div>
+      </form>
+    </div>
+  <% } %>
+</div>

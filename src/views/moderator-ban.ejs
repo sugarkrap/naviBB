@@ -1,0 +1,91 @@
+<div class="profilePage">
+  <div class="profileSidebar">
+    <h2 class="profileUsername"><%= target.username %></h2>
+    <%- include('partials/user-avatar.ejs', { avatarURL: target.avatarURL }) %>
+    <p class="profileMemberSince">Role: <%= target.role %></p>
+    <p class="profileRole <%= target.role %>">
+      <img src="/static/icons/<%= target.role === 'admin' ? 'administration-24.png' : target.role === 'moderator' ? 'gnome-eyes-24.png' : 'music-player-24.png' %>" alt="" />
+      <%= target.role %>
+    </p>
+  </div>
+
+  <div class="profileContent">
+    <div class="categoryBox">
+      <h2 class="category">
+        <img src="/static/icons/stock_stop.png" alt="" />
+        <%= target.isBanned ? 'Edit ban' : 'Ban user' %>
+      </h2>
+
+      <% if (error) { %>
+        <div class="navi-box error">
+          <img src="/static/icons/stock_stop.png" alt="" />
+          <p><%= error %></p>
+        </div>
+      <% } %>
+
+      <% if (target.isBanned) { %>
+        <div class="banInfo navi-box info">
+          <p>
+            <strong>Currently banned until:</strong>
+            <% if (target.bannedUntil && target.bannedUntil.getFullYear() > 9000) { %>
+              Permanent
+            <% } else if (target.bannedUntil) { %>
+              <%= target.bannedUntil.toDateString() %>
+            <% } else { %>
+              Permanent
+            <% } %>
+          </p>
+          <% if (target.banReason) { %>
+            <p><strong>Reason:</strong> <%= target.banReason %></p>
+          <% } %>
+          <p>
+            <strong>Ban type:</strong>
+            <%= target.banType === 'account+ip' ? 'Account + IP' : 'Account' %>
+            <% if (target.banType === 'account+ip' && target.bannedIP) { %>
+              (<%= target.bannedIP %>)
+            <% } %>
+          </p>
+        </div>
+      <% } %>
+
+      <form class="createThreadForm" action="/moderator/ban/<%= target._id %>" method="post">
+        <div class="navi-control">
+          <label class="navi-label" for="duration">Duration</label>
+          <input class="navi-input" type="number" id="duration" name="duration" value="<%= duration %>" min="0" required />
+          <select class="navi-input" name="durationUnit" id="durationUnit">
+            <option value="hours" <%= durationUnit === 'hours' ? 'selected' : '' %>>Hours</option>
+            <option value="days" <%= durationUnit === 'days' ? 'selected' : '' %>>Days</option>
+            <option value="weeks" <%= durationUnit === 'weeks' ? 'selected' : '' %>>Weeks</option>
+            <option value="months" <%= durationUnit === 'months' ? 'selected' : '' %>>Months</option>
+            <option value="permanent" <%= durationUnit === 'permanent' ? 'selected' : '' %>>Permanent</option>
+          </select>
+        </div>
+        <div class="navi-control">
+          <label class="navi-label" for="reason">Reason</label>
+          <textarea class="navi-input" id="reason" name="reason" rows="4"><%= reason %></textarea>
+        </div>
+        <div class="navi-control banIPControl">
+          <label class="banIPLabel">
+            <input type="checkbox" name="banIP" <%= target.banType === 'account+ip' ? 'checked' : '' %> />
+            Also ban this user's IP address
+          </label>
+          <p class="banTypeHint">
+            Ban type: <strong><%= target.banType === 'account+ip' ? 'Account + IP' : 'Account' %></strong>
+          </p>
+        </div>
+        <div class="banActions">
+          <button class="navi-button" type="submit">
+            <img src="/static/icons/stock_stop.png" alt="" />
+            <%= target.isBanned ? 'Update ban' : 'Ban user' %>
+          </button>
+          <% if (target.isBanned) { %>
+            <button class="navi-button" type="submit" formaction="/moderator/ban/<%= target._id %>/unban">
+              <img src="/static/icons/stock_book_green.png" alt="" />
+              Unban now
+            </button>
+          <% } %>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

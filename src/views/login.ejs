@@ -1,0 +1,79 @@
+<div class="loginForm">
+  <!-- this could be put in common with register.ejs -->
+
+   <% if (locals.error) { %>
+    <div class="navi-box error">
+      <img src="/static/icons/stock_stop.png"/>
+      <p>
+        <%= locals.error %>
+      </p>
+    </div>
+  <% } %>
+
+  <% if (locals.message) { %>
+    <div class="navi-box success">
+      <img src="/static/icons/stock_book_green.png"/>
+      <p>
+        <%= locals.message %>
+      </p>
+    </div>
+  <% } %>
+
+  <form action="/login" method="POST">
+    <fieldset>
+      <legend>Login</legend>
+      <div class="navi-control">
+        <label class="navi-label" for="email">Email:</label>
+        <input
+          class="navi-input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Mail"
+        />
+      </div>
+      <div class="navi-control">
+        <label class="navi-label" for="password">Password:</label>
+        <input
+          class="navi-input"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+        />
+      </div>
+      <div class="navi-control" style="margin-top: 0.5rem;">
+        <fieldset style="border: none; padding: 0; margin: 0;">
+          <legend style="font-size: 0.9rem; margin: 0 0 0.25rem 0; padding: 0;">Password Type:</legend>
+          <label style="display: flex; align-items: center; gap: 0.3rem; margin: 0.2rem 0;">
+            <input 
+              type="radio" 
+              name="passwordType" 
+              value="regular" 
+              <%= locals.isUnsecuredConnection ? 'disabled' : 'checked' %>
+              <%= locals.isUnsecuredConnection ? 'title="Regular password is disabled over unsecured connections"' : '' %>
+            />
+            Regular Password
+          </label>
+          <label style="display: flex; align-items: center; gap: 0.3rem; margin: 0.2rem 0;">
+            <input 
+              type="radio" 
+              name="passwordType" 
+              value="temp"
+              <%= locals.isUnsecuredConnection ? 'checked' : '' %>
+            />
+            Temporary Password
+            <% if (locals.isUnsecuredConnection) { %>
+              <small style="color: #666; font-size: 0.8rem;">(required for unsecured)</small>
+            <% } %>
+          </label>
+        </fieldset>
+      </div>
+    </fieldset>
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_exit.png" /> Login
+    </button>
+  </form>
+  <p>Not registered yet? <a href="/register">Register here</a></p>
+  <p>Forgot your password? <a href="/forgot-password">Reset it here</a></p>
+</div>

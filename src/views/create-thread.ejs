@@ -1,0 +1,18 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/stock_news.png" alt="" />Create a new thread
+  </h2>
+
+  <% if (error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
+
+  <form class="createThreadForm" method="post" action="/category/<%= category._id %>/create-thread">
+    <%- include('partials/thread-fieldset.ejs', { title }) %>
+    <%- include('partials/rich-text-editor.ejs', { content }) %>
+
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_mail-send.png" alt="" />Create thread
+    </button>
+  </form>
+</div>

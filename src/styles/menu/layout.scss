@@ -1,0 +1,45 @@
+.mainMenu {
+  display: flex;
+  gap: $spacing;
+  height: 37px;
+  padding: 0 $spacing-small;
+  overflow: hidden;
+
+  background: linear-gradient(
+    to bottom,
+    $accentColor 0%,
+    $midAccentColor 45%,
+    $secondAccentColor 100%
+  );
+  border-radius: $border-radius $border-radius 0 0;
+
+  justify-content: center;
+
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.486);
+
+  .menuLinks {
+    @include reset;
+    list-style: none;
+    display: flex;
+    gap: $spacing;
+
+    height: 100%;
+
+    a {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 $spacing;
+
+      cursor: pointer;
+
+      &.user {
+        // oh boy i know how this is gonna end up, a free form field like this...
+        max-width: 120px;
+        word-break: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

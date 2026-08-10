@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="latin-1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= boardName %></title>
+
+    <link rel="stylesheet" href="/static/css/source-serif-4.css" />
+    <link rel="stylesheet" href="/static/css/open-sans.css" />
+
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <!-- <link rel="stylesheet" href="style-compact.css" /> -->
+  </head>
+  <body>
+    <div class="mainContent">
+      <header>
+        <a href="<%= boardBaseURL %>">
+          <img src="/static/logo.png" />
+          <div id="headerTitle">
+            <h1><%= boardName %></h1>
+            <h3><%= boardTagline %></h3>
+          </div>
+        </a>
+      </header>
+      <div class="mainMenu">
+        <div class="menuLinks">
+          <a class="home" href="<%= boardBaseURL %>" title="Back to the homepage">Home</a>
+          <% if (user) { %>
+            <a class="search" href="<%= boardBaseURL %>search" title="Search the forum">Search</a>  
+            <a class="user" href="<%= boardBaseURL %>profile" title="Your profile"><%= user.username %></a>
+            <a class="pda" href="<%= boardBaseURL %>pda" title="Connect an older device">Connect PDA</a>
+            <a class="logout" href="<%= boardBaseURL %>logout" title="See you soon!">Logout</a>
+          <% } else { %>
+            <a class="login" href="<%= boardBaseURL %>login" title="Welcome back!">Login</a>
+            <a class="register" href="<%= boardBaseURL %>register" title="Want to join us?">Register</a>
+          <% } %>
+        </div>
+      </div>
+      <div id="content">
+        <% if (typeof cookiesAccepted !== 'undefined' && !cookiesAccepted) { %>
+          <div class="cookieBanner info">
+            <p>we use cookies for keeping you connected, there's no tracking</p>
+            <form action="/accept-cookies" method="post">
+              <button class="navi-button" type="submit">Close</button>
+            </form>
+          </div>
+        <% } %>
+        <%- body %>
+      </div>
+      <footer>
+        <p>
+          Made with
+          <img src="/static/icons/stock_3d-favourites.png" /> by
+          <a href="#">sugarkrap</a><br />Icon theme: GNOME2<br />
+          <a href="<%= boardBaseURL %>privacy-policy">Privacy Policy</a>
+          <% if (user && user.isAdmin) { %>
+            | <a href="<%= boardBaseURL %>admin">Admin</a>
+          <% } %>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

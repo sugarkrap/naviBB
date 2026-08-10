@@ -1,0 +1,19 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/stock_book_green.png" alt="" />
+    Edit post
+  </h2>
+  <form class="createThreadForm" action="/post/<%= post._id %>/edit" method="post">
+    <% if (error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png" alt="" />
+        <p><%= error %></p>
+      </div>
+    <% } %>
+    <%- include('partials/rich-text-editor.ejs', { content: post.content, processor: post.processor }) %>
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_save.png" alt="" />
+      Save changes
+    </button>
+  </form>
+</div>

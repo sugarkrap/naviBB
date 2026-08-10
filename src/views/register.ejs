@@ -1,0 +1,96 @@
+<div class="loginForm">
+  <% if (locals.error) { %>
+    <div class="navi-box error">
+      <img src="/static/icons/stock_stop.png"/>
+      <p>
+        <%= locals.error %>
+      </p>
+    </div>
+  <% } %>
+
+  <% if (locals.message) { %>
+    <div class="navi-box success">
+      <img src="/static/icons/stock_book_green.png"/>
+      <p>
+        <%= locals.message %>
+      </p>
+    </div>
+  <% } %>
+
+  <form action="/register" method="POST">
+    <fieldset>
+      <legend>Main info</legend>
+      <div class="navi-control obligatory">
+        <label class="navi-label" for="username">Username:</label>
+        <input
+          class="navi-input"
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Username"
+        />
+      </div>
+      <div class="navi-control obligatory">
+        <label class="navi-label" for="email">Email:</label>
+        <input
+          class="navi-input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email"
+        />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Password</legend>
+      <div class="navi-control obligatory">
+        <label class="navi-label" for="password">Password:</label>
+        <input
+          class="navi-input"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password"
+        />
+      </div>
+      <p class="navi-control-description">
+        Password must be at least 8 characters long.
+      </p>
+      <div class="navi-control obligatory">
+        <label class="navi-label" for="confirmPassword">Confirm:</label>
+        <input
+          class="navi-input"
+          type="password"
+          name="confirmPassword"
+          id="confirmPassword"
+          placeholder="Confirm Password"
+        />
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Captcha</legend>
+      <div class="navi-control navi-captcha obligatory">
+        <img
+          src="/captcha/<%= captchaId %>"
+          alt="Captcha image"
+        />
+        <input
+          class="navi-input"
+          type="text"
+          name="captcha"
+          id="captcha"
+          placeholder="Type the text from the image"
+          autocomplete="off"
+        />
+        <input type="hidden" name="captchaId" value="<%= captchaId %>" />
+      </div>
+      <p class="navi-control-description">
+        no clauding around here thanks
+      </p>
+    </fieldset>
+    <button class="navi-button" type="submit">
+      <img src="/static/icons/stock_save.png" /> Register
+    </button>
+  </form>
+  <p>Already got an account? <a href="/login">Login here</a></p>
+</div>

@@ -1,0 +1,10 @@
+footer {
+  text-align: center;
+  color: $globalBackgroundedTextColor;
+  padding: 0.2em $spacing-small;
+  text-shadow: $globalTextShadow;
+}
+
+footer a {
+  color: $globalBackgroundedTextColor;
+}

@@ -1,0 +1,21 @@
+.navi-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &.obligatory {
+    .navi-label::after {
+      content: '*';
+      color: rgb(206, 33, 33);
+      margin-left: 0.2em;
+    }
+  }
+
+  &-description {
+    grid-column: 1 / -1;
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: center;
+  }
+}

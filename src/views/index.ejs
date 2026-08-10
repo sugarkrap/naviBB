@@ -1,0 +1,29 @@
+<div class="categoryBox">
+  <h2 class="category">
+    <img src="/static/icons/gnome-globe-16.png" alt="" />Forums
+  </h2>
+  <% if (rootItems.length === 0) { %>
+    <p class="emptyIsland">No categories yet. An admin can create some from the admin panel.</p>
+  <% } %>
+  <%- include('partials/category-rows.ejs', { items: rootItems, root: true }) %>
+</div>
+
+<div class="info">
+  <img src="/static/icons/web-browser-48.png" alt="" />
+  <p>
+    Connected users: <%= stats.users %> | Guests: <%= stats.guests %><br />
+    <% if (stats.peakAt) { %>
+      Most users ever online was <%= stats.peakCount %> on
+      <%= stats.peakAt.toISOString().slice(0, 10) %><br />
+    <% } %>
+    <% if (stats.latestMember) { %>
+      Latest member:
+      <a href="/profile/<%= stats.latestMember._id %>"><%= stats.latestMember.username %></a><br />
+    <% } %>
+    <% if (stats.latestPost) { %>
+      Latest post:
+      <a href="/thread/<%= stats.latestPost.threadId %>?page=<%= stats.latestPost.page %>#post-<%= stats.latestPost._id %>"><% if (stats.latestPost.locked) { %>[Locked] <% } %><%= stats.latestPost.title %></a>
+      by <a href="/profile/<%= stats.latestPost.authorId %>"><%= stats.latestPost.authorName %></a>
+    <% } %>
+  </p>
+</div>

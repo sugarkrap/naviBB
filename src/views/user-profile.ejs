@@ -1,0 +1,112 @@
+<% if (profileUser.isBanned) { %>
+  <div class="bannedBanner navi-box error">
+    <p>
+      <strong>Banned until:</strong>
+      <% if (profileUser.bannedUntil && profileUser.bannedUntil.getFullYear() > 9000) { %>
+        Permanent
+      <% } else if (profileUser.bannedUntil) { %>
+        <%= profileUser.bannedUntil.toDateString() %>
+      <% } else { %>
+        Permanent
+      <% } %>
+    </p>
+    <% if (profileUser.banReason) { %>
+      <p><strong>Reason:</strong> <%= profileUser.banReason %></p>
+    <% } %>
+  </div>
+<% } %>
+
+<div class="profilePage">
+  <div class="profileSidebar">
+    <h2 class="profileUsername"><%= profileUser.username %></h2>
+    <%- include('partials/user-avatar.ejs', { avatarURL: profileUser.avatarURL }) %>
+    <p class="profileMemberSince">
+      Member since <%= profileUser.createdAt.toDateString() %>
+    </p>
+    <% if (profileUser.bio) { %>
+      <p class="profileBio"><%= profileUser.bio %></p>
+    <% } %>
+    <p class="profileRole <%= profileUser.role %>">
+      <img src="/static/icons/<%= profileUser.roleIcon %>" alt="" />
+      <%= profileUser.role %>
+    </p>
+
+    <% if (user && (user.isModerator || user.isAdmin) && user.userId !== profileUser._id.toString()) { %>
+      <div class="profileModeratorActions">
+        <a class="navi-button" href="/moderator/ban/<%= profileUser._id %>">
+          <img src="/static/icons/stock_stop.png" alt="" />
+          <%= profileUser.isBanned ? 'Edit ban' : 'Ban' %>
+        </a>
+        <% if (profileUser.isBanned) { %>
+          <form action="/moderator/ban/<%= profileUser._id %>/unban" method="post" class="inlineForm">
+            <button class="navi-button" type="submit">
+              <img src="/static/icons/stock_book_green.png" alt="" />
+              Unban now
+            </button>
+          </form>
+        <% } %>
+        <% if (profileUser.signature) { %>
+          <form action="/moderator/signature/delete/<%= profileUser._id %>" method="post" class="inlineForm">
+            <button class="navi-button" type="submit">
+              <img src="/static/icons/stock_stop.png" alt="" />
+              Delete signature
+            </button>
+          </form>
+        <% } %>
+        <% if (profileUser.bio) { %>
+          <form action="/moderator/bio/delete/<%= profileUser._id %>" method="post" class="inlineForm">
+            <button class="navi-button" type="submit">
+              <img src="/static/icons/stock_stop.png" alt="" />
+              Delete bio
+            </button>
+          </form>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="profileContent">
+    <div class="categoryBox">
+      <h2 class="category">
+        <img src="/static/icons/config-users.png" alt="" />Statistics
+      </h2>
+      <div class="profileStats">
+        <div class="profileStat">
+          <span class="profileStatNumber"><%= threadCount %></span>
+          <span class="profileStatLabel">Threads</span>
+        </div>
+        <div class="profileStat">
+          <span class="profileStatNumber"><%= postCount %></span>
+          <span class="profileStatLabel">Posts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="categoryBox">
+      <h2 class="category">
+        <img src="/static/icons/stock_book_green.png" alt="" />Recent activity
+      </h2>
+      <div class="categoryRows">
+        <% if (recentThreads.length === 0) { %>
+          <p class="emptyIsland">No activity yet.</p>
+        <% } %>
+        <% recentThreads.forEach((thread) => { %>
+          <div class="subCategoryRow">
+            <div class="subCategory">
+              <div class="subCategoryText">
+                <h3 class="subCategoryTitle">
+                  <a href="/thread/<%= thread._id %>"><% if (thread.locked) { %>[Locked] <% } %><%= thread.title %></a>
+                </h3>
+                <p class="subCategoryDescription">
+                  in <%= thread.categoryName %>,
+                  <%= thread.createdAt.toDateString() %>
+                </p>
+              </div>
+            </div>
+            <div class="activityType"><%= thread.type %></div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>

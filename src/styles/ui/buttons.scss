@@ -1,0 +1,48 @@
+.navi-button {
+  box-sizing: border-box;
+  height: 2em;
+  padding: 0.3em $spacing;
+  border: none;
+  font: inherit; // buttons don't inherit font-size by default, unlike <a>, which throws off the 2em height
+  border-radius: $spacing-small;
+  background-image: linear-gradient(
+    180deg,
+    #5cd0ff,
+    #214acd 50%,
+    #5cd0ff
+  ); // now huh where do i put that in a theme... we'll see later
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.719);
+  border: 1px solid rgba(0, 0, 0, 0.473);
+  cursor: pointer;
+  color: $globalBackgroundedTextColor;
+
+  display: flex;
+  gap: $spacing-small;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:active {
+    box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.466);
+  }
+}
+
+.navi-button-group {
+  display: flex;
+  gap: $spacing-small;
+  flex-direction: row;
+
+  .navi-button {
+    display: inline-flex;
+    flex: 1;
+  }
+
+  &.regular-button {
+    flex-direction: column;
+    align-items: center;
+  }
+}

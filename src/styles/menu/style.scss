@@ -1,0 +1,20 @@
+.mainMenu .menuLinks a {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  text-shadow: -1px -1px 0 #000; // cool ass effect
+  text-decoration: none;
+  color: $globalBackgroundedTextColor;
+
+  // they ALL have icons so
+  padding-left: 2em;
+  background: no-repeat 10px center;
+  background-size: 16px;
+
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}

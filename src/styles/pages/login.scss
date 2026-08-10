@@ -1,0 +1,72 @@
+.loginForm {
+  border: 1px solid #2d27758e;
+  border-radius: 0.5em;
+  padding: 1em 0.5em;
+  font-size: 0.8em;
+  background: rgb(230, 230, 230);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.486);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-small;
+}
+
+.loginForm form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-small;
+  width: 100%;
+  max-width: 270px;
+}
+
+.loginForm fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-small;
+  width: 100%;
+  max-width: 270px;
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+  padding: $spacing-small;
+  margin: 0;
+
+  legend {
+    color: #2d27758e;
+  }
+}
+
+.navi-control {
+  display: flex;
+  align-items: center;
+  gap: $spacing-small;
+  width: 100%;
+}
+
+.navi-label {
+  flex: 0 0 6em;
+  text-align: right;
+}
+
+.navi-control .navi-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.navi-control-description {
+  margin: 0;
+  margin-left: calc(6em + $spacing-small);
+  font-style: italic;
+  color: #555;
+}
+
+.loginForm form > .navi-button {
+  align-self: center;
+}
+
+.navi-captcha {
+  display: flex;
+  flex-direction: column;
+}

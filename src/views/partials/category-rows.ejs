@@ -1,0 +1,46 @@
+<div class="categoryRows <%= root ? 'root' : '' %>">
+  <% items.forEach((item) => { %>
+    <div class="subCategoryRow">
+      <a href="/category/<%= item.category._id %>" class="subCategory">
+        <div class="subCategoryIcon">
+          <% if (item.category.logo) { %>
+            <img src="/static/categories/<%= item.category.logo %>" alt="" />
+          <% } else { %>
+            <img src="/static/icons/category-default.png" alt="" />
+          <% } %>
+        </div>
+        <div class="subCategoryText">
+          <h3 class="subCategoryTitle"><%= item.category.name %></h3>
+          <p class="subCategoryDescription"><%= item.category.description %></p>
+        </div>
+      </a>
+      <div class="subCategoryStats">
+        <p class="subCategoryThreads">Threads: <%= item.threadCount %></p>
+        <p class="subCategoryPosts">Posts: <%= item.postCount %></p>
+      </div>
+      <div class="subCategoryLastPost">
+        <% if (item.lastPost) { %>
+          <p class="subCategoryLastPostTitle">
+            <a href="/thread/<%= item.lastPost.threadId %>?page=<%= item.lastPost.page %>#post-<%= item.lastPost._id %>"><% if (item.lastPost.locked) { %>[Locked] <% } %><%= item.lastPost.title %></a>
+            by <a href="/profile/<%= item.lastPost.authorId %>"><%= item.lastPost.authorName %></a>
+          </p>
+          <p class="subCategoryLastPostAuthor"><!-- welp i moved the author out... oh well it's late -->
+            <i><%= item.lastPost.createdAt.toDateString() %></i>
+          </p>
+        <% } else { %>
+          <p class="subCategoryLastPostTitle">No posts yet</p>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (item.children.length > 0) { %>
+      <div class="subsubCategoryRow">
+        <img src="/static/icons/folder-24.png" alt="" />
+        <p class="subsubCategoryDescription">
+          Sub-categories:
+          <% item.children.forEach((child, index) => { %><% if (index > 0) { %>, <% } %><a href="/category/<%= child._id %>"><%= child.name %></a><% }) %>
+        </p>
+      </div>
+    <% } %>
+  <% }) %>
+</div>

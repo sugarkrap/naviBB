@@ -1,0 +1,381 @@
+.categoryBox {
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+  font-size: 0.83em;
+
+  h2.category {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+
+    color: #fff;
+    background: linear-gradient(
+      to bottom,
+      $accentColor 0%,
+      $midAccentColor 45%,
+      $secondAccentColor 100%
+    );
+    border-radius: $border-radius $border-radius 0 0;
+    padding: 0.2em 0.5em;
+    text-shadow: -1px -1px 0 #000;
+    box-shadow:
+      inset 0px 1px 0px rgba(255, 255, 255, 0.486),
+      0 0 5px rgba(44, 44, 44, 0.452);
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .emptyIsland {
+    padding: $spacing-small;
+  }
+}
+
+.categoryRows > :nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.subCategoryRow {
+  display: flex;
+  gap: $spacing-small;
+  min-height: 64px;
+}
+
+.subCategory {
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  gap: $spacing-small;
+  flex: 1;
+  min-width: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.subCategoryIcon,
+.subCategoryStats {
+  background: rgba(128, 128, 128, 0.281);
+  width: 64px;
+  text-align: center;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.subCategoryIcon img {
+  width: 36px;
+  height: 36px;
+  border-radius: $border-radius;
+}
+
+.subCategoryText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.subCategoryStats {
+  width: 100px;
+  font-size: 0.8em;
+  padding: 0.2em $spacing-small;
+}
+
+.subCategoryStats,
+.subCategoryLastPost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.subCategoryLastPost {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.subsubCategoryRow {
+  display: flex;
+  gap: $spacing-small;
+  padding: 0.2em $spacing-small 0.2em 64px;
+  align-items: center;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+
+  a {
+    color: $globalLinkColor;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.info {
+  // need to move that elsewhere, but
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+  padding: 1em 0.5em;
+  font-size: 0.8em;
+  background: rgb(230, 230, 230);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.486);
+
+  img {
+    width: 48px;
+    height: 48px;
+    margin-right: 1em;
+  }
+
+  a {
+    color: $globalLinkColor;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.info .categoryInfo {
+  //doing every paradigm of CSS naming tonight
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+  gap: $spacing-small;
+
+  .categoryDescription {
+    flex: 1;
+  }
+
+  .createThreadButton {
+    // probably actions
+    justify-self: flex-end;
+    color: $globalBackgroundedTextColor;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+  }
+}
+
+.createThreadForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+}
+
+.threadFieldset,
+.postFieldset {
+  border: 1px solid #2d27758e;
+  border-radius: $border-radius;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  legend {
+    padding: 0 0.5em;
+    font-weight: bold;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    height: auto;
+    min-height: 150px;
+  }
+}
+
+.postToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+
+  button {
+    box-sizing: border-box;
+    height: 1.8em;
+    padding: 0.1em 0.6em;
+    border: 1px solid rgba(0, 0, 0, 0.473);
+    border-radius: $spacing-small;
+    background-image: linear-gradient(180deg, #5cd0ff, #214acd 50%, #5cd0ff);
+    box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.719);
+    cursor: pointer;
+    color: $globalBackgroundedTextColor;
+    font-weight: bold;
+
+    &:active {
+      box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.466);
+    }
+  }
+}
+
+.postToolbarButtons {
+  display: flex;
+  gap: 0.3em;
+}
+
+.postToolbarMode {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-size: 0.85em;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    white-space: nowrap;
+    cursor: pointer;
+    margin: 0;
+
+    input[type='radio'] {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+.threadMeta {
+  padding: 0.5em 1em;
+  font-size: 0.85em;
+  border-bottom: 1px solid #2d27758e;
+}
+
+.postRow {
+  display: flex;
+  gap: 1em;
+  padding: 1em;
+  border-bottom: 1px solid #2d27758e;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.postAuthor {
+  width: 150px;
+  flex-shrink: 0;
+  font-size: 0.85em;
+  text-align: center;
+  border-right: 1px solid #2d27758e;
+  padding-right: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4em;
+
+  .navi-avatar {
+    width: 64px;
+    height: 64px;
+
+    img {
+      max-width: 64px;
+      max-height: 64px;
+    }
+  }
+
+  a {
+    color: $globalLinkColor;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.postContent {
+  flex: 1;
+  min-width: 0;
+
+  .postActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.3em;
+    margin-bottom: 0.5em;
+  }
+
+  .postBody {
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .postSignature {
+    border-top: 1px solid #2d27758e;
+    padding-top: 0.5em;
+    margin-top: 0.5em;
+    font-size: 0.85em;
+    color: #555;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  padding: 0.5em;
+
+  a {
+    color: $globalLinkColor;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .disabled {
+    color: #999;
+    cursor: default;
+  }
+
+  .pageInfo {
+    font-size: 0.9em;
+  }
+}
+
+.threadActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-top: 1px solid #2d27758e;
+}
+
+.inlineForm {
+  display: inline;
+  margin: 0;
+}

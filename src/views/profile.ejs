@@ -1,0 +1,85 @@
+<%- include('partials/profile-header.ejs', { user: locals.user }) %>
+<!-- need to randomize this like the good old days -->
+<div class="tabbedView profile">
+  <%- include('partials/profile-tabs.ejs', { activeTab: 'general' }) %>
+  <div class="tabbedView-content">
+    <!-- i really really really really need to put these in partials-->
+    <% if (locals.error) { %>
+      <div class="navi-box error">
+        <img src="/static/icons/stock_stop.png"/>
+        <p>
+          <%= locals.error %>
+        </p>
+      </div>
+    <% } %>
+
+    <% if (locals.message) { %>
+      <div class="navi-box success">
+        <img src="/static/icons/stock_book_green.png"/>
+        <p>
+          <%= locals.message %>
+        </p>
+      </div>
+    <% } %>
+
+    <fieldset class="avatar-fieldset">
+      <legend>Avatar</legend>
+      <%- include('partials/user-avatar.ejs', { avatarURL: locals.user.avatarURL }) %>
+      <form action="/profile/avatar" method="post" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*" />
+        <div class="navi-button-group">
+          <button class="navi-button" type="submit">
+              <img src="/static/icons/stock_save.png" alt="Upload" /> Upload
+          </button>
+          <% if (locals.user.avatarURL) { %>
+            <button class="navi-button" type="submit" formaction="/profile/avatar/delete">
+              <img src="/static/icons/stock_stop.png" alt="Delete" />
+              Reset
+            </button>
+          <% } %>
+        </div>
+      </form>
+      <p>Note: the avatar is limited to something like 10MB and will be <b>resized</b> by the retro computer middleware so, beware!</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Username change</legend>
+      <form action="/profile/username" method="POST">
+        <div class="navi-control obligatory">
+          <label class="navi-label" for="newUsername">New:</label>
+          <input
+            class="navi-input"
+            type="text"
+            name="newUsername"
+            id="newUsername"
+            placeholder="New username"
+          />
+        </div>
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/stock_save.png" /> Update username
+        </button>
+      </form>
+      <p>it can be changed every 6 months</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Email change</legend>
+      <form action="/profile/email" method="POST">
+        <div class="navi-control obligatory">
+          <label class="navi-label" for="newEmail">New:</label>
+          <input
+            class="navi-input"
+            type="email"
+            name="newEmail"
+            id="newEmail"
+            placeholder="New email"
+          />
+        </div>
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/stock_save.png" /> Update email
+        </button>
+      </form>
+      <p>an activation email will be resent, meanwhile your account will be disabled</p>
+    </fieldset>
+  </div>
+</div>

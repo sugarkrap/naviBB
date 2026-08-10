@@ -1,0 +1,27 @@
+.navi-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #2d27758e;
+
+  th,
+  td {
+    padding: $spacing-small;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  thead tr {
+    background-color: rgba(128, 128, 128, 0.2);
+    border-bottom: 1px solid #2d27758e;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: rgba(128, 128, 128, 0.1);
+  }
+}
+
+.navi-category-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: $border-radius;
+}
