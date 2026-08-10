@@ -133,6 +133,15 @@
           <input type="file" name="newLogo" id="newLogo" accept="image/*" />
         </div>
         <div class="navi-control">
+          <label class="navi-label" for="newParent">Parent:</label>
+          <select class="navi-input" name="newParent" id="newParent">
+            <option value="">(none)</option>
+            <% categories.forEach((opt) => { %>
+              <option value="<%= opt._id %>"><%= opt.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="navi-control">
           <label class="navi-label" for="newGroup">Group:</label>
           <select class="navi-input" name="newGroup" id="newGroup">
             <option value="">(<%= UNGROUPED_BOX_NAME %>)</option>

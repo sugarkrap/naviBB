@@ -285,27 +285,34 @@ export const admin = async (
       const parentValue = grouped.parent?.[id] ?? '';
       const newParent = parentValue || null;
       const oldParent = cat.parent ? cat.parent.toString() : null;
-      if (newParent !== oldParent) {
-        if (newParent && wouldCreateLoop(id, newParent, parentsById)) {
-          errors.push(
-            `"${cat.name}" cannot have "${parentsById.has(newParent) ? categories.find((c) => c._id.toString() === newParent)?.name : newParent}" as parent: it would create a loop`,
-          );
-        } else {
-          changedFields.push('parent');
-          cat.parent = newParent as never;
-          parentsById.set(id, newParent);
-        }
-      }
 
-      if (grouped.group && id in grouped.group) {
-        const groupValue = grouped.group[id] || null;
-        const oldGroup = cat.group ? cat.group.toString() : null;
-        if (groupValue !== oldGroup) {
-          if (groupValue && !validGroupIds.has(groupValue)) {
-            errors.push(`"${cat.name}" was assigned an unknown group`);
+      const groupSubmitted = grouped.group !== undefined && id in grouped.group;
+      const groupValue = groupSubmitted ? grouped.group[id] || null : null;
+
+      if (newParent && groupValue) {
+        errors.push(`"${cat.name}" cannot have both a parent and a group`);
+      } else {
+        if (newParent !== oldParent) {
+          if (newParent && wouldCreateLoop(id, newParent, parentsById)) {
+            errors.push(
+              `"${cat.name}" cannot have "${parentsById.has(newParent) ? categories.find((c) => c._id.toString() === newParent)?.name : newParent}" as parent: it would create a loop`,
+            );
           } else {
-            changedFields.push('group');
-            cat.group = groupValue as never;
+            changedFields.push('parent');
+            cat.parent = newParent as never;
+            parentsById.set(id, newParent);
+          }
+        }
+
+        if (groupSubmitted) {
+          const oldGroup = cat.group ? cat.group.toString() : null;
+          if (groupValue !== oldGroup) {
+            if (groupValue && !validGroupIds.has(groupValue)) {
+              errors.push(`"${cat.name}" was assigned an unknown group`);
+            } else {
+              changedFields.push('group');
+              cat.group = groupValue as never;
+            }
           }
         }
       }
@@ -350,35 +357,42 @@ export const admin = async (
     }
 
     if (fields.newName?.trim()) {
+      const newParent = fields.newParent || null;
       const newGroup = fields.newGroup || null;
-      if (newGroup && !validGroupIds.has(newGroup)) {
-        errors.push('New category was assigned an unknown group');
-      }
-      const newCat = new Category({
-        name: fields.newName.trim(),
-        description: fields.newDescription ?? '',
-        group: newGroup && validGroupIds.has(newGroup) ? newGroup : null,
-      });
-      if (files.newLogo) {
-        const filename = await saveLogo(files.newLogo, newCat._id.toString());
-        if (filename) newCat.logo = filename;
-        else
-          errors.push(
-            'New category logo must be a readable PNG, JPEG, GIF or WebP image',
+
+      if (newParent && newGroup) {
+        errors.push('New category cannot have both a parent and a group');
+      } else {
+        if (newGroup && !validGroupIds.has(newGroup)) {
+          errors.push('New category was assigned an unknown group');
+        }
+        const newCat = new Category({
+          name: fields.newName.trim(),
+          description: fields.newDescription ?? '',
+          parent: newParent,
+          group: newGroup && validGroupIds.has(newGroup) ? newGroup : null,
+        });
+        if (files.newLogo) {
+          const filename = await saveLogo(files.newLogo, newCat._id.toString());
+          if (filename) newCat.logo = filename;
+          else
+            errors.push(
+              'New category logo must be a readable PNG, JPEG, GIF or WebP image',
+            );
+        }
+        try {
+          await newCat.save();
+          await logActivity(
+            actorFrom(adminUser),
+            ACTIVITY_ACTIONS.CATEGORY_CREATE,
+            { id: newCat._id.toString(), label: newCat.name },
           );
-      }
-      try {
-        await newCat.save();
-        await logActivity(
-          actorFrom(adminUser),
-          ACTIVITY_ACTIONS.CATEGORY_CREATE,
-          { id: newCat._id.toString(), label: newCat.name },
-        );
-      } catch (err) {
-        if ((err as { code?: number }).code === 11000) {
-          errors.push(`A category named "${newCat.name}" already exists`);
-        } else {
-          throw err;
+        } catch (err) {
+          if ((err as { code?: number }).code === 11000) {
+            errors.push(`A category named "${newCat.name}" already exists`);
+          } else {
+            throw err;
+          }
         }
       }
     }
