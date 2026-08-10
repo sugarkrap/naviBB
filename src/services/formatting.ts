@@ -16,10 +16,11 @@ type Token =
   | { type: 'close'; tag: string };
 
 const ALIGN_VALUES = new Set(['left', 'center', 'right']);
+const HEADING_TAG = /^h[1-6]$/;
 
 const parseBBCode = (input: string): Token[] => {
   const tokens: Token[] = [];
-  const regex = /\[(\/?)(b|i|u|url|img|align)(?:=([^\]]+))?\]/gi;
+  const regex = /\[(\/?)(b|i|u|url|img|align|h[1-6])(?:=([^\]]+))?\]/gi;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = regex.exec(input)) !== null) {
@@ -71,7 +72,7 @@ const renderBBCode = (input: string): string => {
         const href = hrefStack[hrefStack.length - 1] ?? token.value.trim();
         out.push(makeLink(href, token.value));
       } else {
-        out.push(escapeHtml(token.value));
+        out.push(escapeHtml(token.value).replace(/\n/g, '<br>'));
       }
     } else if (token.type === 'open') {
       if (token.tag === 'b') {
@@ -95,6 +96,9 @@ const renderBBCode = (input: string): string => {
           requested && ALIGN_VALUES.has(requested) ? requested : 'left';
         out.push(`<div style="text-align: ${align}">`);
         tagStack.push('align');
+      } else if (HEADING_TAG.test(token.tag)) {
+        out.push(`<${token.tag}>`);
+        tagStack.push(token.tag);
       }
     } else if (token.type === 'close') {
       const top = tagStack.pop();
@@ -104,6 +108,7 @@ const renderBBCode = (input: string): string => {
         else if (token.tag === 'i') out.push('</em>');
         else if (token.tag === 'u') out.push('</u>');
         else if (token.tag === 'align') out.push('</div>');
+        else if (HEADING_TAG.test(token.tag)) out.push(`</${token.tag}>`);
       }
     }
   }
@@ -111,10 +116,12 @@ const renderBBCode = (input: string): string => {
   // close any unclosed tags
   while (tagStack.length > 0) {
     const tag = tagStack.pop();
+    if (tag === undefined) continue;
     if (tag === 'b') out.push('</strong>');
     else if (tag === 'i') out.push('</em>');
     else if (tag === 'u') out.push('</u>');
     else if (tag === 'align') out.push('</div>');
+    else if (HEADING_TAG.test(tag)) out.push(`</${tag}>`);
   }
 
   return out.join('');
@@ -151,6 +158,11 @@ const renderMarkdown = (input: string): string => {
           `<div style="text-align: ${value.toLowerCase()}">${renderInline(inner)}</div>`,
         ),
     );
+
+    text = text.replace(/^(#{1,6}) +(.*)$/gm, (_match, hashes, inner) => {
+      const level = hashes.length;
+      return stash(`<h${level}>${renderInline(inner)}</h${level}>`);
+    });
 
     text = text.replace(/!\[([^[\]]*)\]\(([^\s)]+)\)/g, (_match, alt, url) =>
       stash(
