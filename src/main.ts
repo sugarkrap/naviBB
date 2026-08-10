@@ -8,6 +8,7 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import ejs from 'ejs';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 import mongoose from 'mongoose';
 
 import { registerRoutes as registerViews, ViewConfig } from './views';
@@ -185,6 +186,15 @@ const bootstrap = async () => {
     root: join(__dirname, 'public'),
     prefix: '/static/',
     decorateReply: false,
+  });
+
+  // Browsers request /favicon.ico at the root, not under /static/, so it
+  // needs its own route.
+  const favicon = readFileSync(join(__dirname, 'public', 'favicon.ico'));
+  app.get('/favicon.ico', (_, reply) => {
+    reply.header('Content-Type', 'image/x-icon');
+    reply.header('Cache-Control', 'public, max-age=86400');
+    return reply.send(favicon);
   });
 
   await registerViews(app, config as ViewConfig);
