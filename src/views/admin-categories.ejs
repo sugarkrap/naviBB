@@ -30,6 +30,7 @@
               <th>Name</th>
               <th>Description</th>
               <th>Parent</th>
+              <th>Group</th>
               <th>New logo</th>
             </tr>
           </thead>
@@ -78,6 +79,19 @@
                   </select>
                 </td>
                 <td>
+                  <% if (cat.depth === 0) { %>
+                    <select class="navi-input" name="group[<%= cat._id %>]">
+                      <option value="">(<%= UNGROUPED_BOX_NAME %>)</option>
+                      <% groups.forEach((g) => { %>
+                        <option
+                          value="<%= g._id %>"
+                          <%= cat.group && cat.group.toString() === g._id.toString() ? 'selected' : '' %>
+                        ><%= g.name %></option>
+                      <% }) %>
+                    </select>
+                  <% } %>
+                </td>
+                <td>
                   <input type="file" name="logo[<%= cat._id %>]" accept="image/*" />
                   <% if (cat.logo) { %>
                     <label class="removeLogoLabel">
@@ -117,6 +131,78 @@
         <div class="navi-control">
           <label class="navi-label" for="newLogo">Logo:</label>
           <input type="file" name="newLogo" id="newLogo" accept="image/*" />
+        </div>
+        <div class="navi-control">
+          <label class="navi-label" for="newGroup">Group:</label>
+          <select class="navi-input" name="newGroup" id="newGroup">
+            <option value="">(<%= UNGROUPED_BOX_NAME %>)</option>
+            <% groups.forEach((g) => { %>
+              <option value="<%= g._id %>"><%= g.name %></option>
+            <% }) %>
+          </select>
+        </div>
+      </fieldset>
+
+      <div class="navi-button-group">
+        <button class="navi-button" type="submit">
+          <img src="/static/icons/stock_save.png" /> Validate
+        </button>
+      </div>
+    </form>
+
+    <form action="/admin/category-groups" method="POST">
+      <fieldset>
+        <legend>Category groups</legend>
+        <table class="navi-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Order</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% groups.forEach((g) => { %>
+              <tr>
+                <td>
+                  <input
+                    class="navi-input"
+                    type="text"
+                    name="name[<%= g._id %>]"
+                    value="<%= g.name %>"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="navi-input"
+                    type="number"
+                    name="order[<%= g._id %>]"
+                    value="<%= g.order %>"
+                  />
+                </td>
+                <td>
+                  <label class="removeLogoLabel">
+                    <input type="checkbox" name="delete[<%= g._id %>]" />
+                    Delete
+                  </label>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </fieldset>
+
+      <fieldset>
+        <legend>New category group</legend>
+        <div class="navi-control">
+          <label class="navi-label" for="newGroupName">Name:</label>
+          <input
+            class="navi-input"
+            type="text"
+            name="newGroupName"
+            id="newGroupName"
+            placeholder="Name"
+          />
         </div>
       </fieldset>
 

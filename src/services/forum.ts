@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { Category } from '../schemas/categories';
+import { CategoryGroup } from '../schemas/category-groups';
 import { Thread } from '../schemas/threads';
 import { Post } from '../schemas/posts';
 import { ViewConfig } from '../views';
@@ -198,6 +199,45 @@ export const buildCategoryItems = async (
       };
     }),
   );
+
+export interface CategoryBox {
+  name: string;
+  items: CategoryItem[];
+}
+
+export const UNGROUPED_BOX_NAME = 'Forums';
+
+export const buildCategoryBoxes = async (): Promise<CategoryBox[]> => {
+  const [groups, roots] = await Promise.all([
+    CategoryGroup.find().sort({ order: 1, name: 1 }).lean(),
+    Category.find({ parent: null })
+      .sort('name')
+      .lean<(CategoryDoc & { group: Types.ObjectId | null })[]>(),
+  ]);
+
+  const rootsByGroup = new Map<string, typeof roots>();
+  for (const root of roots) {
+    const key = root.group ? root.group.toString() : '';
+    const bucket = rootsByGroup.get(key) ?? [];
+    bucket.push(root);
+    rootsByGroup.set(key, bucket);
+  }
+
+  const orderedBuckets = [
+    { name: UNGROUPED_BOX_NAME, roots: rootsByGroup.get('') ?? [] },
+    ...groups.map((group) => ({
+      name: group.name,
+      roots: rootsByGroup.get(group._id.toString()) ?? [],
+    })),
+  ].filter((bucket) => bucket.roots.length > 0);
+
+  return Promise.all(
+    orderedBuckets.map(async (bucket) => ({
+      name: bucket.name,
+      items: await buildCategoryItems(bucket.roots),
+    })),
+  );
+};
 
 const fetchLastPosts = async (
   threadIds: Types.ObjectId[],

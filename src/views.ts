@@ -1,10 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import type { Types } from 'mongoose';
 import { createCaptcha } from './services/captcha';
-import { buildCategoryItems, pageForPost } from './services/forum';
+import { buildCategoryBoxes, pageForPost } from './services/forum';
 import { getOnlineStats } from './services/presence';
 import { getIPBan } from './services/ip-bans';
-import { Category } from './schemas/categories';
 import { Thread } from './schemas/threads';
 import { Post } from './schemas/posts';
 import { User } from './schemas/users';
@@ -22,9 +21,8 @@ export interface ViewConfig {
 
 export async function registerRoutes(app: FastifyInstance, config: ViewConfig) {
   app.get('/', async (_, reply) => {
-    const roots = await Category.find({ parent: null }).sort('name').lean();
-    const [rootItems, online, latestMember, latestThread] = await Promise.all([
-      buildCategoryItems(roots),
+    const [categoryBoxes, online, latestMember, latestThread] = await Promise.all([
+      buildCategoryBoxes(),
       getOnlineStats(),
       User.findOne().sort('-createdAt').select('username').lean(),
       Thread.findOne()
@@ -64,7 +62,7 @@ export async function registerRoutes(app: FastifyInstance, config: ViewConfig) {
 
     return reply.view('index', {
       ...config,
-      rootItems,
+      categoryBoxes,
       stats: {
         users: online.users,
         guests: online.guests,

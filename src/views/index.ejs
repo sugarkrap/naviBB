@@ -1,12 +1,19 @@
-<div class="categoryBox">
-  <h2 class="category">
-    <img src="/static/icons/gnome-globe-16.png" alt="" />Forums
-  </h2>
-  <% if (rootItems.length === 0) { %>
+<% if (categoryBoxes.length === 0) { %>
+  <div class="categoryBox">
+    <h2 class="category">
+      <img src="/static/icons/gnome-globe-16.png" alt="" />Forums
+    </h2>
     <p class="emptyIsland">No categories yet. An admin can create some from the admin panel.</p>
-  <% } %>
-  <%- include('partials/category-rows.ejs', { items: rootItems, root: true }) %>
-</div>
+  </div>
+<% } %>
+<% categoryBoxes.forEach((box) => { %>
+  <div class="categoryBox">
+    <h2 class="category">
+      <img src="/static/icons/gnome-globe-16.png" alt="" /><%= box.name %>
+    </h2>
+    <%- include('partials/category-rows.ejs', { items: box.items, root: true }) %>
+  </div>
+<% }) %>
 
 <div class="info">
   <img src="/static/icons/web-browser-48.png" alt="" />

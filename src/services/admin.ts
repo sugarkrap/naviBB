@@ -8,6 +8,7 @@ import { BanLog } from '../schemas/ban-logs';
 import { ActivityLog } from '../schemas/activity-logs';
 import { EXTENSIONS_BY_MIMETYPE } from './avatar';
 import { resizeLogo } from './images';
+import { UNGROUPED_BOX_NAME } from './forum';
 import { generateResetToken, RESET_TOKEN_TTL_MS } from './password-reset';
 import { ViewConfig } from '../views';
 import { actorFrom, logActivity, ACTIVITY_ACTIONS } from './activity-log';
@@ -129,6 +130,7 @@ export const admin = async (
       user: reply.locals!.user,
       categories: sortCategoriesForAdmin(categories),
       groups,
+      UNGROUPED_BOX_NAME,
       ...feedback,
     });
   };
