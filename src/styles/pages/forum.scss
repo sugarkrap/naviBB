@@ -139,6 +139,11 @@
     margin-right: 1em;
   }
 
+  .welcomeMessageIcon {
+    width: auto;
+    height: auto;
+  }
+
   .postBody img {
     width: auto;
     height: auto;
@@ -320,6 +325,47 @@
 
   p {
     margin: 0;
+  }
+}
+
+// standalone (not nested under .postContent) since .postBody is also reused
+// bare inside .info for the welcome message
+.postBody {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: normal;
+    color: $secondAccentColor;
+    margin: 0.5em 0 0.25em;
+    line-height: 1.25;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    font-size: 1.6em;
+  }
+  h2 {
+    font-size: 1.4em;
+  }
+  h3 {
+    font-size: 1.25em;
+  }
+  h4 {
+    font-size: 1.1em;
+  }
+  h5 {
+    font-size: 1em;
+  }
+  h6 {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 }
 
