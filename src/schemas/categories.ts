@@ -20,6 +20,10 @@ export const CategorySchema = new mongoose.Schema(
       ref: 'CategoryGroup',
       default: null,
     },
+    order: {
+      type: Number,
+      default: 0,
+    },
     logo: {
       type: String,
       default: '',

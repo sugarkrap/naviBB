@@ -178,6 +178,7 @@ const bootstrap = async () => {
     layout: 'layout.ejs',
     includeViewExtension: true,
     propertyName: 'view',
+    production: process.env.NODE_ENV === 'production',
   });
 
   await registerSCSSMiddleware(app);

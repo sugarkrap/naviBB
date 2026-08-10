@@ -148,7 +148,7 @@ export const buildCategoryItems = async (
     categories.map(async (category) => {
       const [children, threadCount, threads] = await Promise.all([
         Category.find({ parent: category._id })
-          .sort('name')
+          .sort({ order: 1, name: 1 })
           .lean<CategoryDoc[]>(),
         Thread.countDocuments({ category: category._id }),
         Thread.find({ category: category._id })
@@ -211,7 +211,7 @@ export const buildCategoryBoxes = async (): Promise<CategoryBox[]> => {
   const [groups, roots] = await Promise.all([
     CategoryGroup.find().sort({ order: 1, name: 1 }).lean(),
     Category.find({ parent: null })
-      .sort('name')
+      .sort({ order: 1, name: 1 })
       .lean<(CategoryDoc & { group: Types.ObjectId | null })[]>(),
   ]);
 
@@ -271,7 +271,7 @@ export const forum = async (app: FastifyInstance, config: ViewConfig) => {
     }
 
     const childrenPromise = Category.find({ parent: category._id })
-      .sort('name')
+      .sort({ order: 1, name: 1 })
       .lean<CategoryDoc[]>();
 
     const threadCount = await Thread.countDocuments({ category: category._id });

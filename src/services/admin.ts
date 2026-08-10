@@ -32,6 +32,7 @@ const sortCategoriesForAdmin = <
     _id: { toString(): string };
     parent?: { toString(): string } | null;
     name: string;
+    order: number;
   },
 >(
   categories: T[],
@@ -44,7 +45,7 @@ const sortCategoriesForAdmin = <
     byParent.set(key, siblings);
   }
   for (const siblings of byParent.values()) {
-    siblings.sort((a, b) => a.name.localeCompare(b.name));
+    siblings.sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
   }
 
   const out: (T & { depth: number })[] = [];
@@ -122,7 +123,7 @@ export const admin = async (
     feedback: { error?: string; message?: string } = {},
   ) => {
     const [categories, groups] = await Promise.all([
-      Category.find().sort('name').lean(),
+      Category.find().sort({ order: 1, name: 1 }).lean(),
       CategoryGroup.find().sort({ order: 1, name: 1 }).lean(),
     ]);
     return reply.view('admin-categories', {
@@ -280,6 +281,15 @@ export const admin = async (
       if (description !== undefined && description !== cat.description) {
         changedFields.push('description');
         cat.description = description;
+      }
+
+      const orderValue = grouped.order?.[id];
+      if (orderValue !== undefined) {
+        const order = parseInt(orderValue, 10);
+        if (!Number.isNaN(order) && order !== cat.order) {
+          changedFields.push('order');
+          cat.order = order;
+        }
       }
 
       const oldParent = cat.parent ? cat.parent.toString() : null;
