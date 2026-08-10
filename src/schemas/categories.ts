@@ -16,12 +16,17 @@ export const CategorySchema = new mongoose.Schema(
       ref: 'Category',
       default: null,
     },
+    group: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CategoryGroup',
+      default: null,
+    },
     logo: {
       type: String,
       default: '',
     },
   },
-  {timestamps: true,},
+  { timestamps: true },
 );
 
 export const Category = mongoose.model('Category', CategorySchema);

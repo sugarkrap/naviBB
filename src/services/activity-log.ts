@@ -3,6 +3,9 @@ import { ActivityLog } from '../schemas/activity-logs';
 export const ACTIVITY_ACTIONS = {
   CATEGORY_CREATE: 'Created category',
   CATEGORY_EDIT: 'Edited category',
+  CATEGORY_GROUP_CREATE: 'Created category group',
+  CATEGORY_GROUP_EDIT: 'Edited category group',
+  CATEGORY_GROUP_DELETE: 'Deleted category group',
   USER_ROLE_CHANGE: 'Changed user role',
   USER_ACTIVATE: 'Activated user',
   USER_DEACTIVATE: 'Deactivated user',

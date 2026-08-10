@@ -2,6 +2,7 @@ import { unlink, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { Category } from '../schemas/categories';
+import { CategoryGroup } from '../schemas/category-groups';
 import { User } from '../schemas/users';
 import { BanLog } from '../schemas/ban-logs';
 import { ActivityLog } from '../schemas/activity-logs';
@@ -118,15 +119,19 @@ export const admin = async (
   const renderCategories = async (
     reply: FastifyReply,
     feedback: { error?: string; message?: string } = {},
-  ) =>
-    reply.view('admin-categories', {
+  ) => {
+    const [categories, groups] = await Promise.all([
+      Category.find().sort('name').lean(),
+      CategoryGroup.find().sort({ order: 1, name: 1 }).lean(),
+    ]);
+    return reply.view('admin-categories', {
       ...config,
       user: reply.locals!.user,
-      categories: sortCategoriesForAdmin(
-        await Category.find().sort('name').lean(),
-      ),
+      categories: sortCategoriesForAdmin(categories),
+      groups,
       ...feedback,
     });
+  };
 
   const renderUsers = async (
     reply: FastifyReply,
@@ -234,6 +239,11 @@ export const admin = async (
         cat.parent ? cat.parent.toString() : null,
       ]),
     );
+    const validGroupIds = new Set(
+      (await CategoryGroup.find().select('_id').lean()).map((g) =>
+        g._id.toString(),
+      ),
+    );
 
     const errors: string[] = [];
 
@@ -285,6 +295,19 @@ export const admin = async (
         }
       }
 
+      if (grouped.group && id in grouped.group) {
+        const groupValue = grouped.group[id] || null;
+        const oldGroup = cat.group ? cat.group.toString() : null;
+        if (groupValue !== oldGroup) {
+          if (groupValue && !validGroupIds.has(groupValue)) {
+            errors.push(`"${cat.name}" was assigned an unknown group`);
+          } else {
+            changedFields.push('group');
+            cat.group = groupValue as never;
+          }
+        }
+      }
+
       const logo = files[`logo[${id}]`];
       if (logo) {
         const filename = await saveLogo(logo, id);
@@ -325,9 +348,14 @@ export const admin = async (
     }
 
     if (fields.newName?.trim()) {
+      const newGroup = fields.newGroup || null;
+      if (newGroup && !validGroupIds.has(newGroup)) {
+        errors.push('New category was assigned an unknown group');
+      }
       const newCat = new Category({
         name: fields.newName.trim(),
         description: fields.newDescription ?? '',
+        group: newGroup && validGroupIds.has(newGroup) ? newGroup : null,
       });
       if (files.newLogo) {
         const filename = await saveLogo(files.newLogo, newCat._id.toString());
@@ -357,6 +385,89 @@ export const admin = async (
       return renderCategories(reply, { error: errors.join(' ') });
     }
     return renderCategories(reply, { message: 'Categories saved' });
+  });
+
+  app.post('/admin/category-groups', async (request, reply) => {
+    const adminUser = requireAdmin(reply);
+    if (!adminUser) return;
+
+    const fields = request.body as Record<string, string>;
+    const grouped = indexFields(fields);
+    const groups = await CategoryGroup.find();
+
+    const errors: string[] = [];
+
+    for (const group of groups) {
+      const id = group._id.toString();
+      const changedFields: string[] = [];
+
+      if (grouped.delete?.[id]) {
+        await Category.updateMany({ group: group._id }, { group: null });
+        await group.deleteOne();
+        await logActivity(
+          actorFrom(adminUser),
+          ACTIVITY_ACTIONS.CATEGORY_GROUP_DELETE,
+          { id, label: group.name },
+        );
+        continue;
+      }
+
+      const name = grouped.name?.[id]?.trim();
+      if (name && name !== group.name) {
+        changedFields.push('name');
+        group.name = name;
+      }
+
+      const orderValue = grouped.order?.[id];
+      if (orderValue !== undefined) {
+        const order = parseInt(orderValue, 10);
+        if (!Number.isNaN(order) && order !== group.order) {
+          changedFields.push('order');
+          group.order = order;
+        }
+      }
+
+      if (group.isModified()) {
+        try {
+          await group.save();
+          await logActivity(
+            actorFrom(adminUser),
+            ACTIVITY_ACTIONS.CATEGORY_GROUP_EDIT,
+            { id, label: group.name },
+            changedFields.join(', '),
+          );
+        } catch (err) {
+          if ((err as { code?: number }).code === 11000) {
+            errors.push(`A category group named "${group.name}" already exists`);
+          } else {
+            throw err;
+          }
+        }
+      }
+    }
+
+    if (fields.newGroupName?.trim()) {
+      const newGroup = new CategoryGroup({ name: fields.newGroupName.trim() });
+      try {
+        await newGroup.save();
+        await logActivity(
+          actorFrom(adminUser),
+          ACTIVITY_ACTIONS.CATEGORY_GROUP_CREATE,
+          { id: newGroup._id.toString(), label: newGroup.name },
+        );
+      } catch (err) {
+        if ((err as { code?: number }).code === 11000) {
+          errors.push(`A category group named "${newGroup.name}" already exists`);
+        } else {
+          throw err;
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      return renderCategories(reply, { error: errors.join(' ') });
+    }
+    return renderCategories(reply, { message: 'Category groups saved' });
   });
 
   app.get('/admin/users', async (_, reply) => {
